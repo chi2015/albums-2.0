@@ -1,6 +1,7 @@
 import React from "react";
 
 import DateMonth from "../DateMonth";
+import AlbumsButton from '../AlbumsButton';
 import Modal from "react-modal";
 
 export default class Album extends React.Component {
@@ -31,8 +32,11 @@ export default class Album extends React.Component {
 }
 
 class ItunesLink extends React.Component {
+	viewInItunes() {
+	  window.open(this.props.link,'_blank');
+	}
 	render() {
-		if (this.props.link) return <a href={this.props.link} className="itunes-link albums-btn" target="_blank">View in iTunes</a>;
+		if (this.props.link) return <AlbumsButton buttonType="standard" onClick={this.viewInItunes.bind(this)}>View in iTunes</AlbumsButton>;
 		else return (null);
 	}
 }

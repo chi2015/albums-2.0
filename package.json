@@ -4,6 +4,7 @@
   "description":"",
   "main":"webpack.config.js",
   "dependencies":  {
+    "babel-core":"6.26.0",
     "babel-loader":"^6.2.0",
     "babel-plugin-add-module-exports":"^0.1.2",
     "babel-plugin-react-html-attrs":"^2.0.0",
@@ -16,6 +17,8 @@
     "react-dom":"^0.14.6",
     "react-modal":"^3.1.0",
     "superagent":"^3.7.0",
+    "glamor":"2.20.40",
+    "glamorous":"4.11.2",
     "webpack":"^1.12.9"
   },
   "devDependencies":{},

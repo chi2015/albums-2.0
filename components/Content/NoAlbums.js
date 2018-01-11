@@ -1,4 +1,5 @@
 import React from "react";
+import AlbumsButton from '../AlbumsButton';
 
 export default class NoAlbums extends React.Component {
 
@@ -6,7 +7,7 @@ export default class NoAlbums extends React.Component {
     return (
       <div className="no-albums-block">
         <h2>No albums found in chosen date</h2>
-        <div class="albums-btn add-album-btn" onClick={this.props.add}>Add</div>
+        <AlbumsButton onClick={this.props.add}>Add</AlbumsButton>
       </div>
     );
   }

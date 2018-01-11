@@ -3,6 +3,7 @@ import React from "react";
 import ChooseDate from "./Header/ChooseDate";
 import Modal from "react-modal";
 import DateMonth from "./DateMonth";
+import AlbumsButton from './AlbumsButton';
 
  const customStyles = {
 	content : {
@@ -54,12 +55,12 @@ export default class Header extends React.Component {
 			<h1>Albums Calendar Catalog</h1>
 			<div class="add-btn" onClick={this.props.add}></div>
 		</div>
-		<div className="date-button albums-btn" onClick={this.openDateModal.bind(this)}>
+		<AlbumsButton buttonType="standard" onClick={this.openDateModal.bind(this)}>
 			<DateMonth month={this.props.month}/> {this.props.year}
-		</div>
+		</AlbumsButton>
 		<Modal isOpen={this.state.dateModalOpen} onRequestClose={this.closeDateModal.bind(this)} style={customStyles}>
 			<ChooseDate year={this.state.year} month={this.state.month} changeDate={this.changeDate.bind(this)}/>
-			<div className="choose-date-button albums-btn" onClick={this.getAlbums.bind(this)}>OK</div>
+			<AlbumsButton onClick={this.getAlbums.bind(this)}>OK</AlbumsButton>
 		</Modal>
 	  </header>
     );

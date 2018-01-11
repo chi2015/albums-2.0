@@ -4,6 +4,7 @@ import Modal from "react-modal";
 import Header from "./Header";
 import Footer from "./Footer";
 import Content from "./Content";
+import AlbumsButton from './AlbumsButton';
 
 import ChooseDate from "./Header/ChooseDate";
 
@@ -247,11 +248,12 @@ export default class Layout extends React.Component {
 				
 			</div>
 			<input name="cover" type="file" accept=".jpg, .png, .jpeg, .gif" style={{visibility : 'hidden', width : '0', height : '0'}} id="cover_file" onChange={this.openCoverFile.bind(this)} />
-			{this.state.uploading ? <h2>Uploading new album...</h2> : <div className="choose-date-button albums-btn" onClick={this.add.bind(this)}>Add</div>}
+			{this.state.uploading ? <h2>Uploading new album...</h2> : 
+				<AlbumsButton onClick={this.add.bind(this)}>Add</AlbumsButton>}
 		</Modal>
 		<Modal isOpen={this.state.errorModalOpen} onRequestClose={this.closeErrorModal.bind(this)} style={errorCustomStyles}>
 			<h2>{this.state.errorText}</h2>
-			<div className="choose-date-button albums-btn" onClick={this.closeErrorModal.bind(this)}>OK</div>
+			<AlbumsButton onClick={this.closeErrorModal.bind(this)}>OK</AlbumsButton>
 		</Modal>
       </div>	
     );

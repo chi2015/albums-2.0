@@ -1,6 +1,7 @@
 import React from "react";
 
 import Album from "./Album";
+import AlbumsButton from '../AlbumsButton';
 import Modal from "react-modal";
 
 export default class Albums extends React.Component {
@@ -45,7 +46,7 @@ export default class Albums extends React.Component {
         {list}
         <Modal isOpen={this.state.delModalOpen} onRequestClose={this.closeDelModal.bind(this)}>Delete {this.state.id}
 			Password: <input type="text" onChange={this.changePass.bind(this)} />
-			<div className="choose-date-button albums-btn" onClick={this.deleteAlbum.bind(this)}>DELETE</div>
+			<AlbumsButton onClick={this.deleteAlbum.bind(this)} buttonType="danger">DELETE</AlbumsButton>
         </Modal>
       </div>
     );

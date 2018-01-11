@@ -120,24 +120,6 @@ footer p {
 	margin: 0;
 }
 
-.choose-date-button {
-	width: 40px;
-	margin-top: 5px;
-}
-
-.albums-btn {
-	display: block;
-	background-color: #0080fc;
-	border-radius: 5px;
-	color: white;
-	font-size: 14px;
-	text-align: center;
-	height: 24px;
-	line-height: 24px;
-	text-decoration: none;
-	cursor: pointer;
-}
-
 .no-albums-block {
 	display: flex;
 	flex-direction: row;
