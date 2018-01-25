@@ -8,10 +8,19 @@ import AlbumsButton from './AlbumsButton';
 
 import ChooseDate from "./Header/ChooseDate";
 
+import HeadText from './HeadText';
+
 import request from 'superagent';
+import glamorous from 'glamorous';
 //next to watch https://www.youtube.com/watch?v=qh3dYM6Keuw (react 4)
 //next to watch https://www.youtube.com/watch?v=_D1JGNidMr4 (react 5)
 //TODO: setState by timeout, bind state to props
+
+const LayoutBlock = glamorous.div({
+	margin: '0 auto',
+	maxWidth: 900,
+	minHeight: '100%'
+});
 
  const customStyles = {
 	content : {
@@ -223,12 +232,12 @@ export default class Layout extends React.Component {
   render() {
 
     return (
-      <div className="layout">
+      <LayoutBlock>
       	<Header changeDate={this.changeDate.bind(this)} year={this.state.year} month={this.state.month} add={this.openAddModal.bind(this)}/>
       	<Content albums={this.state.albums} add={this.openAddModal.bind(this)} loading={this.state.loading} delFunc={function(id, pass) { this.delete_album(id, pass); }.bind(this)}/>
       	<Footer/>
       	<Modal isOpen={this.state.addModalOpen} onRequestClose={this.closeAddModal.bind(this)} style={customStyles}>
-			<h2>Add Album</h2>
+			<HeadText>Add Album</HeadText>
 			<ChooseDate year={this.state.newAlbumAdd.year} month={this.state.newAlbumAdd.month} changeDate={this.changeNewAlbumDate.bind(this)}/>
 			<div className="new-album-block">
 				<div className="inputs-block">
@@ -248,14 +257,14 @@ export default class Layout extends React.Component {
 				
 			</div>
 			<input name="cover" type="file" accept=".jpg, .png, .jpeg, .gif" style={{visibility : 'hidden', width : '0', height : '0'}} id="cover_file" onChange={this.openCoverFile.bind(this)} />
-			{this.state.uploading ? <h2>Uploading new album...</h2> : 
+			{this.state.uploading ? <HeadText>Uploading new album...</HeadText> : 
 				<AlbumsButton onClick={this.add.bind(this)}>Add</AlbumsButton>}
 		</Modal>
 		<Modal isOpen={this.state.errorModalOpen} onRequestClose={this.closeErrorModal.bind(this)} style={errorCustomStyles}>
-			<h2>{this.state.errorText}</h2>
+			<HeadText>{this.state.errorText}</HeadText>
 			<AlbumsButton onClick={this.closeErrorModal.bind(this)}>OK</AlbumsButton>
 		</Modal>
-      </div>	
+      </LayoutBlock>	
     );
   }
 }

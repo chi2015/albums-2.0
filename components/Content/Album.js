@@ -3,6 +3,49 @@ import React from "react";
 import DateMonth from "../DateMonth";
 import AlbumsButton from '../AlbumsButton';
 import Modal from "react-modal";
+import glamorous from "glamorous";
+
+const AlbumItem = glamorous.div({
+	width: 225,
+	overflow: 'hidden',
+	display: 'flex',
+	flexDirection: 'column',
+	alignItems: 'flex-start',
+	margin: '30px 20px 30px 0'
+});
+
+const AlbumCover = glamorous.div({});
+
+const AlbumCoverImg = glamorous.img({
+	width: 220,
+	height: 220,
+	border: '#e1e7f2 1px solid',
+	borderRadius: 10
+});
+
+const AlbumInfo = glamorous.div({
+	marginTop: 10,
+	fontSize: 14
+});
+
+const AlbumArtist = glamorous.div({
+	color: '#333333',
+	fontWeight: 'bold'
+});
+
+const AlbumTitle = glamorous.div({
+	color: '#333333'
+});
+
+const AlbumDate = glamorous.div({
+	marginTop: 5,
+	color: '#8e8e93'
+});
+
+const AlbumCopyright = glamorous.div({
+	fontSize: 12,
+	color: '#bbbbbb'
+});
 
 export default class Album extends React.Component {
   
@@ -17,16 +60,16 @@ export default class Album extends React.Component {
   
   render() {
     return (
-      <div className="album-item">
-        <div className="album-cover" onDoubleClick={this.props.openDelModal}><img src={"img/"+this.imgSrc()} /></div>
-        <div className="album-info">
-			<div className="album-artist">{this.props.artist}</div>
-			<div className="album-title">{this.props.title}</div>
-			<div className="album-date"><DateMonth month={this.props.month}/> {this.props.year}</div>
-        </div>
+      <AlbumItem>
+        <AlbumCover onDoubleClick={this.props.openDelModal}><AlbumCoverImg src={"img/"+this.imgSrc()} /></AlbumCover>
+        <AlbumInfo>
+			<AlbumArtist>{this.props.artist}</AlbumArtist>
+			<AlbumTitle>{this.props.title}</AlbumTitle>
+			<AlbumDate><DateMonth month={this.props.month}/> {this.props.year}</AlbumDate>
+        </AlbumInfo>
         <ItunesLink link={this.props.itunes_link}/>
-        <div className="album-copyright">{this.copyrightString()}</div>
-      </div>
+        <AlbumCopyright>{this.copyrightString()}</AlbumCopyright>
+      </AlbumItem>
     );
   }
 }

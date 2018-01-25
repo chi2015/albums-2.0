@@ -5,104 +5,6 @@ html, body {
 	height: 100%;
 }
 
-.layout {
-	margin: 0 auto;
-	max-width: 900px;
-	min-height: 100%;
-}
-
-header {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
-	height: 48px;
-	border-bottom: #e1e7f2 1px solid;
-}
-
-header .title {
-	display: flex;
-	flex-direction: row;
-	justify-content: flex-start;
-	align-items: center;
-}
-
-header .title .add-btn {
-	display: block;
-	width: 40px;
-	height: 40px;
-	margin-left: 5px;
-	background-size: 40px 40px;
-	background-repeat: no-repeat;
-	background-image: url('img/add-icon.png');
-	cursor: pointer;
-}
-
-header h1 {
-	font-size: 20px;
-}
-
-h2 {
-	font-size: 16px;
-}
-
-.date-button {
-	width: 150px;
-}
-
-.albums-block {
-	display: flex;
-	flex-direction: row;
-	align-items: flex-start;
-	justify-content: flex-start;
-	flex-wrap: wrap;
-	align-content: space-around;
-}
-
-.album-item {
-	width: 225px;
-	overflow: hidden;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	margin: 30px 20px 30px 0;
-}
-
-.album-info {
-	margin-top: 10px;
-	font-size: 14px;
-}
-
-.album-artist, .album-title {
-	color: #333333;
-}
-
-.album-artist {
-	font-weight: bold;
-}
-
-.album-date {
-	margin-top: 5px;
-	color: #8e8e93;
-}
-
-.album-cover img {
-	width: 220px;
-	height: 220px;
-	border: #e1e7f2 1px solid;
-	border-radius: 10px;
-}
-
-.album-copyright {
-	font-size: 12px;
-	color: #bbbbbb;
-}
-
-.itunes-link {
-	width: 100px;
-	margin: 5px 0;
-}
-
 footer {
 	position: absolute;
     left: 0;
@@ -126,10 +28,6 @@ footer p {
 	align-items: center;
 	justify-content: center;
 	padding: 20px 0;
-}
-
-.no-albums-block h2 {
-	font-size: 16px;
 }
 
 .no-albums-block .add-album-btn {
@@ -211,6 +109,3 @@ footer p {
 	width: 100%;
 	height: 100%;
 }
-
-
-

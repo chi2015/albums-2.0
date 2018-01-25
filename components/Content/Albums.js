@@ -3,6 +3,16 @@ import React from "react";
 import Album from "./Album";
 import AlbumsButton from '../AlbumsButton';
 import Modal from "react-modal";
+import glamorous from "glamorous";
+
+const AlbumsBlock = glamorous.div({
+	display: 'flex',
+	flexDirection: 'row',
+	alignItems: 'flex-start',
+	justifyContent: 'flex-start',
+	flexWrap: 'wrap',
+	alignContent: 'space-around'
+});
 
 export default class Albums extends React.Component {
 
@@ -42,13 +52,13 @@ export default class Albums extends React.Component {
                                                     openDelModal={function() { this.openDelModal(item.id);}.bind(this)}/>);
     
     return (
-      <div className="albums-block">
+      <AlbumsBlock>
         {list}
         <Modal isOpen={this.state.delModalOpen} onRequestClose={this.closeDelModal.bind(this)}>Delete {this.state.id}
 			Password: <input type="text" onChange={this.changePass.bind(this)} />
 			<AlbumsButton onClick={this.deleteAlbum.bind(this)} buttonType="danger">DELETE</AlbumsButton>
         </Modal>
-      </div>
+      </AlbumsBlock>
     );
   }
 }

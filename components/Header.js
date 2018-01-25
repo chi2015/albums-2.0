@@ -4,6 +4,29 @@ import ChooseDate from "./Header/ChooseDate";
 import Modal from "react-modal";
 import DateMonth from "./DateMonth";
 import AlbumsButton from './AlbumsButton';
+import AddButton from "./AddButton";
+import glamorous from "glamorous";
+
+
+const Heading = glamorous.h1({
+	fontSize: 20
+});
+
+const HeaderBlock = glamorous.div({
+	display: 'flex',
+	flexDirection: 'row',
+	justifyContent: 'space-between',
+	alignItems: 'center',
+	height: 48,
+	borderBottom: '#e1e7f2 1px solid'
+});
+
+const HeaderTitle = glamorous.div({
+	display: 'flex',
+	flexDirection: 'row',
+	justifyContent: 'flex-start',
+	alignItems: 'center'
+});
 
  const customStyles = {
 	content : {
@@ -50,11 +73,11 @@ export default class Header extends React.Component {
   
   render() {
     return (
-      <header>
-		<div className="title">
-			<h1>Albums Calendar Catalog</h1>
-			<div class="add-btn" onClick={this.props.add}></div>
-		</div>
+      <HeaderBlock>
+		<HeaderTitle>
+			<Heading>Albums Calendar Catalog</Heading>
+			<AddButton onClick={this.props.add}/>
+		</HeaderTitle>
 		<AlbumsButton buttonType="standard" onClick={this.openDateModal.bind(this)}>
 			<DateMonth month={this.props.month}/> {this.props.year}
 		</AlbumsButton>
@@ -62,7 +85,7 @@ export default class Header extends React.Component {
 			<ChooseDate year={this.state.year} month={this.state.month} changeDate={this.changeDate.bind(this)}/>
 			<AlbumsButton onClick={this.getAlbums.bind(this)}>OK</AlbumsButton>
 		</Modal>
-	  </header>
+	  </HeaderBlock>
     );
   }
 }
