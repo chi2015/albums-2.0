@@ -22,6 +22,80 @@ const LayoutBlock = glamorous.div({
 	minHeight: '100%'
 });
 
+const NewAlbumBlock = glamorous.div({
+	display: 'flex',
+	flexDirection: 'row',
+	justifyContent: 'space-between',
+	alignItems: 'center'
+});
+
+const InputsBlock = glamorous.div({
+	width: 200,
+	textAlign: 'center',
+	margin: '20px 0',
+	display: 'flex',
+	flexDirection: 'column',
+	justifyContent: 'center',
+	alignItems: 'flex-start'
+});
+
+const InputBlock = glamorous.div({
+	textAlign: 'left'
+});
+
+const AddAlbumInput = glamorous.input({
+	display: 'block',
+	margin: '5px 0 15px',
+	width: 170,
+	height: 24,
+	fontSize: 16
+});
+
+const AlbumCover = glamorous.div({
+	width: 200,
+	height: 200,
+	backgroundColor: '#c9c9c3',
+	display: 'flex',
+	flexDirection: 'column',
+	justifyContent: 'center',
+	alignItems: 'center',
+	position: 'relative',
+	cursor: 'pointer'
+});
+
+const AlbumCoverInner = glamorous.div({
+	width: '80%',
+	height: '80%',
+	borderRadius: '50%',
+	border: '5px white solid',
+	display: 'flex',
+	flexDirection: 'column',
+	justifyContent: 'center',
+	alignItems: 'center'
+});
+
+const AlbumCoverCenter = glamorous.div({
+	width: '5%',
+	height: '5%',
+	borderRadius: '50%',
+	border: '25px white solid'
+});
+
+const AlbumCoverTitle = glamorous.div({
+	position: 'absolute',
+	top: '50%',
+	left : '50%',
+	transform: 'translate(-50%, -50%)',
+	color: 'grey',
+	opacity: 0.5,
+	fontSize: '30px'
+});
+
+const AlbumCoverImg = glamorous.img({
+	width: '100%',
+	height: '100%'
+});
+
  const customStyles = {
 	content : {
 		top                   : '50%',
@@ -239,23 +313,23 @@ export default class Layout extends React.Component {
       	<Modal isOpen={this.state.addModalOpen} onRequestClose={this.closeAddModal.bind(this)} style={customStyles}>
 			<HeadText>Add Album</HeadText>
 			<ChooseDate year={this.state.newAlbumAdd.year} month={this.state.newAlbumAdd.month} changeDate={this.changeNewAlbumDate.bind(this)}/>
-			<div className="new-album-block">
-				<div className="inputs-block">
-					<div className="input-block">Artist: <input type="text" onChange={this.changeArtist.bind(this)} /></div>
-					<div className="input-block">Title: <input type="text" onChange={this.changeTitle.bind(this)} /></div>
-					<div className="input-block">iTunes Link: <input type="text" onChange={this.changeITunesLink.bind(this)} /></div>
-					<div className="input-block">Copyright: <input type="text" onChange={this.changeCopyright.bind(this)} /></div>
-				</div>
+			<NewAlbumBlock>
+				<InputsBlock>
+					<InputBlock>Artist: <AddAlbumInput type="text" onChange={this.changeArtist.bind(this)} /></InputBlock>
+					<InputBlock>Title: <AddAlbumInput type="text" onChange={this.changeTitle.bind(this)} /></InputBlock>
+					<InputBlock>iTunes Link: <AddAlbumInput type="text" onChange={this.changeITunesLink.bind(this)} /></InputBlock>
+					<InputBlock>Copyright: <AddAlbumInput type="text" onChange={this.changeCopyright.bind(this)} /></InputBlock>
+				</InputsBlock>
 				{this.state.newAlbumAdd.cover ? 
-					<div className="new-cover-block" onClick={this.browseCover}><img className="loaded" src={this.state.newAlbumAdd.cover}/></div>
+					<AlbumCover onClick={this.browseCover}><AlbumCoverImg src={this.state.newAlbumAdd.cover}/></AlbumCover>
 					:
-					<div className="new-cover-block" onClick={this.browseCover}>
-						<div className="cover-inner"><div className="cover-center"></div></div>
-						<div className="cover-title">ADD COVER</div>
-					</div>
+					<AlbumCover onClick={this.browseCover}>
+						<AlbumCoverInner><AlbumCoverCenter/></AlbumCoverInner>
+						<AlbumCoverTitle>ADD COVER</AlbumCoverTitle>
+					</AlbumCover>
 					}
 				
-			</div>
+			</NewAlbumBlock>
 			<input name="cover" type="file" accept=".jpg, .png, .jpeg, .gif" style={{visibility : 'hidden', width : '0', height : '0'}} id="cover_file" onChange={this.openCoverFile.bind(this)} />
 			{this.state.uploading ? <HeadText>Uploading new album...</HeadText> : 
 				<AlbumsButton onClick={this.add.bind(this)}>Add</AlbumsButton>}

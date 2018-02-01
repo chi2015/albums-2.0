@@ -1,15 +1,25 @@
 import React from "react";
 import AlbumsButton from '../AlbumsButton';
 import HeadText from '../HeadText';
+import glamorous from 'glamorous';
+
+const NoAlbumsBlock = glamorous.div({
+	display: 'flex',
+	flexDirection: 'row',
+	alignItems: 'center',
+	justifyContent: 'center',
+	padding:'20px 0'
+	
+});
 
 export default class NoAlbums extends React.Component {
 
   render() {
     return (
-      <div className="no-albums-block">
+      <NoAlbumsBlock>
         <HeadText>No albums found in chosen date</HeadText>
         <AlbumsButton onClick={this.props.add}>Add</AlbumsButton>
-      </div>
+      </NoAlbumsBlock>
     );
   }
 }
