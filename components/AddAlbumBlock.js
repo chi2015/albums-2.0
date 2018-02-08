@@ -5,8 +5,7 @@ import ChooseDate from "./Header/ChooseDate";
 import glamorous from 'glamorous';
 import AlbumsButton from './AlbumsButton';
 import request from 'superagent';
-
-const server_url = 'http://chi2016.ru/albums/server/albums.php';
+import { serverUrl } from './config';
 
 const NewAlbumBlock = glamorous.div({
 	display: 'flex',
@@ -138,7 +137,7 @@ export default class AddAlbumBlock extends React.Component {
 	
 	add() { 
 		this.setState({ uploading : true });
-	    let req = request.post(server_url);
+	    let req = request.post(serverUrl);
 	    let file_input = document.getElementById('cover_file');
 	    req.field('action','add');
 	    

@@ -13,6 +13,8 @@ import HeadText from './HeadText';
 import request from 'superagent';
 import glamorous from 'glamorous';
 
+import { serverUrl } from './config';
+
 const LayoutBlock = glamorous.div({
 	margin: '0 auto',
 	maxWidth: 900,
@@ -52,8 +54,6 @@ const errorCustomStyles = {
 	}
 }
 
-const server_url = 'http://chi2016.ru/albums/server/albums.php';
-
 export default class Layout extends React.Component {
   constructor() {
   	super();
@@ -83,7 +83,7 @@ export default class Layout extends React.Component {
   
   list() {
 	  this.setState({ loading : true });
-	  request.post(server_url)
+	  request.post(serverUrl)
 	         .send('action=list')
 	         .send('year='+this.state.year)
 	         .send('month='+this.state.month)

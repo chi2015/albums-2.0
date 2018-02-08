@@ -6,8 +6,7 @@ import Modal from "react-modal";
 import glamorous from "glamorous";
 import request from 'superagent';
 import HeadText from '../HeadText';
-
-const server_url = 'http://chi2016.ru/albums/server/albums.php';
+import { serverUrl } from '../config';
 
 const AlbumsBlock = glamorous.div({
 	display: 'flex',
@@ -65,7 +64,8 @@ export default class Albums extends React.Component {
   
   deleteAlbum() {
 	  this.closeDelModal();
-	  request.post(server_url)
+	  console.log('serverUrl', serverUrl);
+	  request.post(serverUrl)
 	         .send('action=delete')
 	         .send('id='+this.state.item.id)
 	         .send('pass='+this.state.item.pass)
