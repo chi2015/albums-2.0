@@ -4,6 +4,7 @@ import Album from "./Album";
 import AlbumsButton from '../AlbumsButton';
 import Modal from "react-modal";
 import glamorous from "glamorous";
+import HeadText from '../HeadText';
 
 const AlbumsBlock = glamorous.div({
 	display: 'flex',
@@ -14,16 +15,32 @@ const AlbumsBlock = glamorous.div({
 	alignContent: 'space-around'
 });
 
+const delCustomStyles = {
+	content : {
+		top                   : '50%',
+		left                  : '50%',
+	    maxHeight            : '190px',
+		right                 : 'auto',
+		bottom                : 'auto',
+		textAlign   :          'center',
+		display    :             'flex',
+		flexDirection :         'column',
+		justifyContent : 'space-around',
+		alignItems : 'center',
+		transform             : 'translate(-50%, -50%)'
+	}
+}
+
 export default class Albums extends React.Component {
 
   constructor() {
 	  super();
-	  this.state = { delModalOpen : false, id : 0, pass : ""};
+	  this.state = { delModalOpen : false, item : false, pass : ""};
 	  
   }
   
-  openDelModal(id) {
-	  this.setState({ delModalOpen : true, id : id});
+  openDelModal(item) {
+	  this.setState({ delModalOpen : true, item : item});
   }
   
   closeDelModal() {
@@ -35,7 +52,7 @@ export default class Albums extends React.Component {
   }
   
   deleteAlbum() {
-	  this.props.delFunc(this.state.id, this.state.pass);
+	  this.props.delFunc(this.state.item.id, this.state.pass);
 	  this.closeDelModal();
   }
   
@@ -49,13 +66,14 @@ export default class Albums extends React.Component {
                                                     cover={item.cover}
                                                     copyright={item.copyright}
                                                     itunes_link={item.itunes_link}
-                                                    openDelModal={function() { this.openDelModal(item.id);}.bind(this)}/>);
+                                                    openDelModal={function() { this.openDelModal(item);}.bind(this)}/>);
     
     return (
       <AlbumsBlock>
         {list}
-        <Modal isOpen={this.state.delModalOpen} onRequestClose={this.closeDelModal.bind(this)}>Delete {this.state.id}
-			Password: <input type="text" onChange={this.changePass.bind(this)} />
+        <Modal isOpen={this.state.delModalOpen} onRequestClose={this.closeDelModal.bind(this)} style={delCustomStyles}>
+			<HeadText>Delete album "{this.state.item.title}" by {this.state.item.artist}</HeadText>
+			<div>Password: <input type="text" onChange={this.changePass.bind(this)} /></div>
 			<AlbumsButton onClick={this.deleteAlbum.bind(this)} buttonType="danger">DELETE</AlbumsButton>
         </Modal>
       </AlbumsBlock>
