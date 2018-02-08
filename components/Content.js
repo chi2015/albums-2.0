@@ -9,7 +9,7 @@ export default class Content extends React.Component {
     if (this.props.loading) return (<div><Loading/></div>);
     return (
       <div>
-        {this.props.albums.length ? <Albums list={this.props.albums} delFunc={this.props.delFunc}/> : <NoAlbums add={this.props.add}/>}
+        {this.props.albums.length ? <Albums list={this.props.albums} okDelCallback={this.props.okDelCallback} errorDelCallback={this.props.errorDelCallback}/> : <NoAlbums add={this.props.add}/>}
       </div>
     );
   }

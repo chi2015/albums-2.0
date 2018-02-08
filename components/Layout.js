@@ -1,15 +1,13 @@
 import React from "react";
-import Modal from "react-modal";
 
 import Header from "./Header";
-import Footer from "./Footer";
 import Content from "./Content";
+import Footer from "./Footer";
+
+import Modal from "react-modal";
+
 import AlbumsButton from './AlbumsButton';
-
-import ChooseDate from "./Header/ChooseDate";
-
 import AddAlbumBlock from "./AddAlbumBlock";
-
 import HeadText from './HeadText';
 
 import request from 'superagent';
@@ -21,7 +19,7 @@ const LayoutBlock = glamorous.div({
 	minHeight: '100%'
 });
 
- const customStyles = {
+const customStyles = {
 	content : {
 		top                   : '50%',
 		left                  : '50%',
@@ -71,8 +69,7 @@ export default class Layout extends React.Component {
   		uploading : false,
   		addModalOpen : false,
   		errorModalOpen : false,
-  		errorText : "",
-  		newAlbumAdd : {}
+  		errorText : ""
   	}
   }
   
@@ -85,7 +82,6 @@ export default class Layout extends React.Component {
   }
   
   list() {
-	  console.log(this.state.loading);
 	  this.setState({ loading : true });
 	  request.post(server_url)
 	         .send('action=list')
@@ -106,20 +102,12 @@ export default class Layout extends React.Component {
 	  this.setState({ errorModalOpen : true, errorText : error });
   }
   
-  delete_album(id, pass) {
-	  console.log('del', id, pass);
-	  request.post(server_url)
-	         .send('action=delete')
-	         .send('id='+id)
-	         .send('pass='+pass)
-	         .end(function(err, res) { console.log('del res', res);
-				if (res.body) {
-					if (res.body.ok) this.list();
-					else if (res.body.error) this.setState({ errorModalOpen : true, errorText : res.body.error });
-					else this.setState({ errorModalOpen : true, errorText : "Unknown error" });
-				}
-				else this.setState({ errorModalOpen : true, errorText : "Unknown error" }); 
-			 }.bind(this));
+  delCallbackOk() {
+	  this.list();
+  }
+  
+  delCallbackError(error) {
+	  this.setState({ errorModalOpen : true, errorText : error });
   }
   
   openAddModal() {
@@ -146,7 +134,7 @@ export default class Layout extends React.Component {
     return (
       <LayoutBlock>
       	<Header changeDate={this.changeDate.bind(this)} year={this.state.year} month={this.state.month} add={this.openAddModal.bind(this)}/>
-      	<Content albums={this.state.albums} add={this.openAddModal.bind(this)} loading={this.state.loading} delFunc={function(id, pass) { this.delete_album(id, pass); }.bind(this)}/>
+      	<Content albums={this.state.albums} add={this.openAddModal.bind(this)} loading={this.state.loading} okDelCallback={this.delCallbackOk.bind(this)} errorDelCallback={this.delCallbackError.bind(this)}/>
       	<Footer/>
       	<Modal isOpen={this.state.addModalOpen} onRequestClose={this.closeAddModal.bind(this)} style={customStyles}>
 			<AddAlbumBlock year={this.state.year} month={this.state.month} okCallback={this.addCallbackOk.bind(this)} errorCallback={this.addCallbackError.bind(this)}/>

@@ -4,7 +4,10 @@ import Album from "./Album";
 import AlbumsButton from '../AlbumsButton';
 import Modal from "react-modal";
 import glamorous from "glamorous";
+import request from 'superagent';
 import HeadText from '../HeadText';
+
+const server_url = 'http://chi2016.ru/albums/server/albums.php';
 
 const AlbumsBlock = glamorous.div({
 	display: 'flex',
@@ -58,6 +61,19 @@ export default class Albums extends React.Component {
   deleteAlbum() {
 	  this.props.delFunc(this.state.item.id, this.state.pass);
 	  this.closeDelModal();
+  }
+  
+  deleteAlbum() {
+	  this.closeDelModal();
+	  request.post(server_url)
+	         .send('action=delete')
+	         .send('id='+this.state.item.id)
+	         .send('pass='+this.state.item.pass)
+	         .end(function(err, res) { console.log('del res', res);
+				if (res.body && res.body.ok) this.props.okDelCallback();
+				if (res.body && res.body.error) this.props.errorDelCallback(res.body.error);
+				if (!res.body) this.errorDelCallback("Unknown error");
+			 }.bind(this));
   }
   
   render() {
