@@ -50,6 +50,10 @@ export default class Header extends React.Component {
 	  this.state = {dateModalOpen : false, year: props.year, month: props.month};
   }
   
+  componentWillMount() {
+	  Modal.setAppElement('body');
+  }
+  
   componentWillReceiveProps(nextProps) {
 	this.setState({ year : nextProps.year, month : nextProps.month }); 
   }

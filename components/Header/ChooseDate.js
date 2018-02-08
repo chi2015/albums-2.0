@@ -1,5 +1,4 @@
 import React from "react";
-
 import DateMonth from "../DateMonth";
 
 export default class ChooseDate extends React.Component {

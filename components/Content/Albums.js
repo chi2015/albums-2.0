@@ -39,6 +39,10 @@ export default class Albums extends React.Component {
 	  
   }
   
+  componentWillMount() {
+	  Modal.setAppElement('body');
+  }
+  
   openDelModal(item) {
 	  this.setState({ delModalOpen : true, item : item});
   }

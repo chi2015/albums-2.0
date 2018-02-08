@@ -76,6 +76,10 @@ export default class Layout extends React.Component {
   	}
   }
   
+  componentWillMount() {
+	  Modal.setAppElement('body');
+  }
+  
   componentDidMount() {
     this.list();
   }
