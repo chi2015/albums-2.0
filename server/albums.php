@@ -15,6 +15,8 @@
     		['error' => 'No date specified'];
     		case 'add': return isset($request['year']) && isset($request['month']) ? albums_add($request) : 
     		['error' => 'No date specified'];
+    		case 'delete': return isset($request['id']) && isset($request['pass']) ? albums_delete($request['id'], $request['pass']) : 
+    		['error' => 'No ID or pass specified'];
     		default: return ['error' => 'Unknown action'];
     	}
     	}
