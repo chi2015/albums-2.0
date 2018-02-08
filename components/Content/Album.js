@@ -50,11 +50,11 @@ const AlbumCopyright = glamorous.div({
 export default class Album extends React.Component {
   
   imgSrc() {
-	  return this.props.cover || "cd1.jpg";
+	  return this.props.albumItem.cover || "cd1.jpg";
   }
   
   copyrightString() {
-	  return this.props.copyright ? "\u2117"+" "+this.props.copyright : "";
+	  return this.props.albumItem.copyright ? "\u2117"+" "+this.props.albumItem.copyright : "";
 	  
   }
   
@@ -63,11 +63,11 @@ export default class Album extends React.Component {
       <AlbumItem>
         <AlbumCover onDoubleClick={this.props.openDelModal}><AlbumCoverImg src={"img/"+this.imgSrc()} /></AlbumCover>
         <AlbumInfo>
-			<AlbumArtist>{this.props.artist}</AlbumArtist>
-			<AlbumTitle>{this.props.title}</AlbumTitle>
-			<AlbumDate><DateMonth month={this.props.month}/> {this.props.year}</AlbumDate>
+			<AlbumArtist>{this.props.albumItem.artist}</AlbumArtist>
+			<AlbumTitle>{this.props.albumItem.title}</AlbumTitle>
+			<AlbumDate><DateMonth month={this.props.albumItem.month}/> {this.props.albumItem.year}</AlbumDate>
         </AlbumInfo>
-        <ItunesLink link={this.props.itunes_link}/>
+        <ItunesLink link={this.props.albumItem.itunes_link}/>
         <AlbumCopyright>{this.copyrightString()}</AlbumCopyright>
       </AlbumItem>
     );

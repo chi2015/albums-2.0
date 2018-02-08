@@ -78,15 +78,7 @@ export default class Albums extends React.Component {
   
   render() {
     
-    var list = this.props.list.map((item) => <Album key={item.id} 
-                                                    artist={item.artist} 
-                                                    title={item.title} 
-                                                    year={item.year} 
-                                                    month={item.month} 
-                                                    cover={item.cover}
-                                                    copyright={item.copyright}
-                                                    itunes_link={item.itunes_link}
-                                                    openDelModal={function() { this.openDelModal(item);}.bind(this)}/>);
+    var list = this.props.list.map((item) => <Album key={item.id} albumItem={item} openDelModal={function() { this.openDelModal(item);}.bind(this)}/>);
     
     return (
       <AlbumsBlock>
