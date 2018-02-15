@@ -1,10 +1,10 @@
 import React from "react";
 
-import ChooseDate from "./Header/ChooseDate";
+import ChooseDate from "./ChooseDate";
 import Modal from "react-modal";
-import DateMonth from "./DateMonth";
-import AlbumsButton from './AlbumsButton';
-import AddButton from "./AddButton";
+import DateMonth from "../DateMonth";
+import AlbumsButton from '../glamorous/AlbumsButton';
+import AddButton from "../glamorous/AddButton";
 import glamorous from "glamorous";
 
 

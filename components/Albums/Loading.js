@@ -1,5 +1,5 @@
 import React from "react";
-import HeadText from '../HeadText';
+import HeadText from '../glamorous/HeadText';
 
 export default class Loading extends React.Component {
 

@@ -1,7 +1,7 @@
 import React from "react";
 
 import DateMonth from "../DateMonth";
-import AlbumsButton from '../AlbumsButton';
+import AlbumsButton from '../glamorous/AlbumsButton';
 import Modal from "react-modal";
 import glamorous from "glamorous";
 

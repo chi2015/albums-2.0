@@ -1,12 +1,12 @@
 import React from "react";
 
 import Album from "./Album";
-import AlbumsButton from '../AlbumsButton';
+import AlbumsButton from '../glamorous/AlbumsButton';
 import Modal from "react-modal";
 import glamorous from "glamorous";
 import request from 'superagent';
-import HeadText from '../HeadText';
-import { serverUrl } from '../config';
+import HeadText from '../glamorous/HeadText';
+import { serverUrl } from '../../config';
 
 const AlbumsBlock = glamorous.div({
 	display: 'flex',

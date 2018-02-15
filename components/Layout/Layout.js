@@ -6,14 +6,14 @@ import Footer from "./Footer";
 
 import Modal from "react-modal";
 
-import AlbumsButton from './AlbumsButton';
+import AlbumsButton from '../glamorous/AlbumsButton';
 import AddAlbumBlock from "./AddAlbumBlock";
-import HeadText from './HeadText';
+import HeadText from '../glamorous/HeadText';
 
 import request from 'superagent';
 import glamorous from 'glamorous';
 
-import { serverUrl } from './config';
+import { serverUrl } from '../../config';
 
 const LayoutBlock = glamorous.div({
 	margin: '0 auto',

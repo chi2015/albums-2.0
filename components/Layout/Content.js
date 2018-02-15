@@ -1,7 +1,7 @@
 import React from "react";
-import Albums from "./Content/Albums";
-import NoAlbums from "./Content/NoAlbums";
-import Loading from "./Content/Loading";
+import Albums from "../Albums/Albums";
+import NoAlbums from "../Albums/NoAlbums";
+import Loading from "../Albums/Loading";
 
 export default class Content extends React.Component {
 

@@ -1,11 +1,11 @@
 import React from "react";
 
-import HeadText from './HeadText';
-import ChooseDate from "./Header/ChooseDate";
+import HeadText from '../glamorous/HeadText';
+import ChooseDate from "./ChooseDate";
 import glamorous from 'glamorous';
-import AlbumsButton from './AlbumsButton';
+import AlbumsButton from '../glamorous/AlbumsButton';
 import request from 'superagent';
-import { serverUrl } from './config';
+import { serverUrl } from '../../config';
 
 const NewAlbumBlock = glamorous.div({
 	display: 'flex',

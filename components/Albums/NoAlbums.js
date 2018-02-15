@@ -1,6 +1,6 @@
 import React from "react";
-import AlbumsButton from '../AlbumsButton';
-import HeadText from '../HeadText';
+import AlbumsButton from '../glamorous/AlbumsButton';
+import HeadText from '../glamorous/HeadText';
 import glamorous from 'glamorous';
 
 const NoAlbumsBlock = glamorous.div({
