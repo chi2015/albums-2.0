@@ -5,6 +5,8 @@ import AlbumsButton from '../glamorous/AlbumsButton';
 import Modal from "react-modal";
 import glamorous from "glamorous";
 
+import { observer } from "mobx-react";
+
 const AlbumItem = glamorous.div({
 	width: 225,
 	overflow: 'hidden',
@@ -47,7 +49,20 @@ const AlbumCopyright = glamorous.div({
 	color: '#bbbbbb'
 });
 
-export default class Album extends React.Component {
+const Album = observer(({ item }) => (
+	<AlbumItem>
+        <AlbumCover><AlbumCoverImg src={"img/"+item.imgSrc} /></AlbumCover>
+        <AlbumInfo>
+			<AlbumArtist>{item.artist}</AlbumArtist>
+			<AlbumTitle>{item.title}</AlbumTitle>
+			<AlbumDate><DateMonth month={item.month}/> {item.year}</AlbumDate>
+        </AlbumInfo>
+        <ItunesLink link={item.itunes_link}/>
+        <AlbumCopyright>{item.copyrightString}</AlbumCopyright>
+      </AlbumItem>
+));
+
+/*export default class Album extends React.Component {
   
   imgSrc() {
 	  return this.props.albumItem.cover || "cd1.jpg";
@@ -73,6 +88,8 @@ export default class Album extends React.Component {
     );
   }
 }
+*/
+export default Album;
 
 class ItunesLink extends React.Component {
 	viewInItunes() {

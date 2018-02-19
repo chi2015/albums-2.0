@@ -3,6 +3,15 @@ import DateMonth from "../DateMonth";
 
 export default class ChooseDate extends React.Component {
 
+	constructor(props) {
+		super(props);
+		this.state = { year : props.year, month : props.month };
+	}
+	
+	componentWillReceiveProps(nextProps) {
+		this.setState({ year : nextProps.year, month : nextProps.month });
+	}
+
     handleChangeMonth(e) { console.log('val', e.target.value);
     	this.props.changeDate(this.props.year, e.target.value);
     }
@@ -23,10 +32,10 @@ export default class ChooseDate extends React.Component {
     
     return (
       <div className="choose-date-block">
-      	<select value={this.props.month} onChange={this.handleChangeMonth.bind(this)} name="month">
+      	<select value={this.state.month} onChange={this.handleChangeMonth.bind(this)} name="month">
          {month_list}
         </select>
-      	<select value={this.props.year} onChange={this.handleChangeYear.bind(this)} name="year">
+      	<select value={this.state.year} onChange={this.handleChangeYear.bind(this)} name="year">
          {year_list}
         </select>
       </div>

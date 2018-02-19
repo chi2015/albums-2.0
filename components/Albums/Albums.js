@@ -8,6 +8,8 @@ import request from 'superagent';
 import HeadText from '../glamorous/HeadText';
 import { serverUrl } from '../../config';
 
+import { observer } from "mobx-react";
+
 const AlbumsBlock = glamorous.div({
 	display: 'flex',
 	flexDirection: 'row',
@@ -33,7 +35,7 @@ const delCustomStyles = {
 	}
 }
 
-export default class Albums extends React.Component {
+@observer class Albums extends React.Component {
 
   constructor() {
 	  super();
@@ -78,7 +80,7 @@ export default class Albums extends React.Component {
   
   render() {
     
-    var list = this.props.list.map((item) => <Album key={item.id} albumItem={item} openDelModal={function() { this.openDelModal(item);}.bind(this)}/>);
+    var list = this.props.albumsStore.albumsList.map(item => <Album key={item.id} item={item} openDelModal={function() { this.openDelModal(item);}.bind(this)}/>);
     
     return (
       <AlbumsBlock>
@@ -92,3 +94,5 @@ export default class Albums extends React.Component {
     );
   }
 }
+
+export default Albums;
