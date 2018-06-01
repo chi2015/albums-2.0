@@ -12,9 +12,6 @@ export default class AlbumsListModel {
 	@computed
 	
 	get albumsList() {
-		console.log('albums', this);
-		let ret = this.albums.filter(album => album.year == this.year && album.month == this.month);
-		console.log('ret', ret);
 		return this.albums.filter(album => album.year == this.year && album.month == this.month);
 	}
 	
@@ -25,9 +22,9 @@ export default class AlbumsListModel {
 	@action
 	addAlbum(data) {
 		this.albums.push(new AlbumModel(data));
-		console.log('albums list', this.albums);
+		console.log('albums list', this.albumsList);
 	}
-	
+
 	constructor(year, month) {
 		this.year = year;
 		this.month = month;

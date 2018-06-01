@@ -47,7 +47,7 @@ const HeaderTitle = glamorous.div({
 export default class Header extends React.Component {
   constructor(props) {
 	  super(props);
-	  this.state = {dateModalOpen : false, year: props.year, month: props.month};
+	  this.state = {dateModalOpen : false, year: props.albumsStore.year, month: props.albumsStore.month};
   }
   
   componentWillMount() {
@@ -55,9 +55,6 @@ export default class Header extends React.Component {
   }
   
   componentWillReceiveProps(nextProps) {
-	/*this.setState({ year : nextProps.year, month : nextProps.month }); 
-	this.props.albumsStore.month = month;
-	  this.props.albumsStore.year = year;*/
   }
 
   openDateModal() {
@@ -69,16 +66,14 @@ export default class Header extends React.Component {
   }
   
   getAlbums() {
-  //	this.props.changeDate(this.state.year, this.state.month);
-  //	this.props.albumsStore
-  	this.props.changeDate();
+    this.props.albumsStore.month = this.state.month;
+	this.props.albumsStore.year = this.state.year;
+    this.props.changeDate();
   	this.closeDateModal();
   }
   
   changeDate(year, month) {
-	  console.log(year, month);
-	  this.props.albumsStore.month = month;
-	  this.props.albumsStore.year = year;
+	  this.setState({year : year, month : month});
   }
   
   render() {
@@ -92,7 +87,7 @@ export default class Header extends React.Component {
 			<DateMonth month={this.props.albumsStore.month}/> {this.props.albumsStore.year}
 		</AlbumsButton>
 		<Modal isOpen={this.state.dateModalOpen} onRequestClose={this.closeDateModal.bind(this)} style={customStyles}>
-			<ChooseDate year={this.props.albumsStore.year} month={this.props.albumsStore.month} changeDate={this.changeDate.bind(this)}/>
+			<ChooseDate year={this.state.year} month={this.state.month} changeDate={this.changeDate.bind(this)}/>
 			<AlbumsButton onClick={this.getAlbums.bind(this)}>OK</AlbumsButton>
 		</Modal>
 	  </HeaderBlock>

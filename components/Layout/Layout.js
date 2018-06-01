@@ -62,6 +62,7 @@ let month = d.getMonth() + 1;
 if (month < 10) month = "0"+month;
 
 const albumsStore = new AlbumsListModel(year, month);
+window.store = albumsStore;
 
 export default class Layout extends React.Component {
   constructor() {
@@ -84,9 +85,12 @@ export default class Layout extends React.Component {
   }
   
   list() {
-	  if (albumsStore.addedDates[albumsStore.year] && albumsStore.addedDates[albumsStore.year][albumsStore.month]) return;
-	  
-	  this.setState({ loading : true });
+
+	this.setState({ loading: true});
+	 if (albumsStore.addedDates[albumsStore.year] && albumsStore.addedDates[albumsStore.year][albumsStore.month]) {
+		this.setState({ loading: false}); 
+		return;
+	 }
 	  request.post(serverUrl)
 	         .send('action=list')
 	         .send('year='+albumsStore.year)
@@ -140,9 +144,6 @@ export default class Layout extends React.Component {
   }
   
   changeDate() {
-  	//this.setState({year : year, month : month}, this.list);
-  	//albumsStore.year = year;
-  	//albumsStore.month = month;
   	this.list();
   }
   
