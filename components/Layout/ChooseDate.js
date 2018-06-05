@@ -5,7 +5,7 @@ export default class ChooseDate extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = { year : props.year, month : props.month };
+		this.state = { year : props.year, month : props.month, mode : props.mode };
 	}
 	
 	componentWillReceiveProps(nextProps) {
@@ -23,9 +23,10 @@ export default class ChooseDate extends React.Component {
   render() {
     
     var year_list = [];
+    if (this.state.mode == "list") year_list.push(<option key={0} value={0}>All years</option>);
     for (var year=2017; year>=2000; year--) year_list.push(<option key={year} value={year}>{year}</option>);
     var month_list = [];
-    for (var month=1; month<=12; month++) {
+    for (var month=this.state.mode == "list" ? 0 : 1; month<=12; month++) {
 		var month_str = month < 10 ? "0"+month : month;
 		month_list.push(<DateMonth key={month} month={month} mode="option"/>);
 	}

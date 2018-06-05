@@ -2,7 +2,7 @@
     include_once("config.php");
     
     function albums_list($year, $month) {
-    	if (!preg_match('/^[0-9]{4}$/', $year)) return ['error' => 'Wrong playlist year format'];
+    	if ($year!="0" && !preg_match('/^[0-9]{4}$/', $year)) return ['error' => 'Wrong playlist year format'];
     	if (!preg_match('/^[0-9]{2}$/', $month)) return ['error' => 'Wrong playlist month format'];
 
         global $host, $user, $pass, $dbname;
@@ -18,8 +18,15 @@
         	mysql_close($link);
         	return ["error" => "Could not select database"];
         }
-        
-        $query = "SELECT id, artist, title, year, month, itunes_link, cover, copyright FROM albums WHERE year = $year AND month = $month ORDER BY year DESC, month ASC, artist ASC";
+		
+		$conditions = [];
+
+		if ($year) $conditions[] = "year = $year";
+		if ($month) $conditions[] = "month = $month";
+
+		$conditions_str = count($conditions) > 0 ? " WHERE ".implode(" AND ", $conditions) : "";
+		
+		$query = "SELECT id, artist, title, year, month, itunes_link, cover, copyright FROM albums$conditions_str ORDER BY year DESC, month ASC, artist ASC";
 		
 		$result = mysql_query($query);
 		

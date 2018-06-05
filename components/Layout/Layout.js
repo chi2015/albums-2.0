@@ -97,7 +97,15 @@ export default class Layout extends React.Component {
 	         .send('month='+albumsStore.month)
 	         .end(function(err, res) { console.log('res', res);
 				 if (res.body && res.body.ok && Array.isArray(res.body.albums)) {
-					 if (!albumsStore.addedDates[albumsStore.year]) albumsStore.addedDates[albumsStore.year] = {};
+					if (albumsStore.year == "0") 
+						for(let y=2000; y<=2017; y++) {
+							if (!albumsStore.addedDates[""+y]) albumsStore.addedDates[""+y] = {};
+							albumsStore.addedDates[""+y][albumsStore.month] = true;
+						}
+					if (!albumsStore.addedDates[albumsStore.year]) albumsStore.addedDates[albumsStore.year] = {};
+					if (albumsStore.month == "00")
+						for (let m=1; m<=12; m++)
+							albumsStore.addedDates[albumsStore.year][m < 10 ? "0"+m : m] = true;
 					 albumsStore.addedDates[albumsStore.year][albumsStore.month] = true;
 					 res.body.albums.forEach(function(album) {
 						 console.log('album', album);
@@ -111,7 +119,10 @@ export default class Layout extends React.Component {
   }
 
   addCallbackOk(res) {
-	  this.setState({year : res.year, month : res.month}, function() { this.list(); this.closeAddModal(); }.bind(this));
+	albumsStore.year = year;
+	albumsStore.month = res.month;
+	this.list();
+	this.closeAddModal();
   }
   
   addCallbackError(error, close) { console.log('error', error);
@@ -154,7 +165,7 @@ export default class Layout extends React.Component {
       	<Content albumsStore={albumsStore} add={this.openAddModal.bind(this)} loading={this.state.loading} okDelCallback={this.delCallbackOk.bind(this)} errorDelCallback={this.delCallbackError.bind(this)}/>
       	<Footer/>
       	<Modal isOpen={this.state.addModalOpen} onRequestClose={this.closeAddModal.bind(this)} style={customStyles}>
-			<AddAlbumBlock year={this.state.year} month={this.state.month} okCallback={this.addCallbackOk.bind(this)} errorCallback={this.addCallbackError.bind(this)}/>
+			<AddAlbumBlock year={albumsStore.year} month={albumsStore.month} okCallback={this.addCallbackOk.bind(this)} errorCallback={this.addCallbackError.bind(this)}/>
 		</Modal>
 		<Modal isOpen={this.state.errorModalOpen} onRequestClose={this.closeErrorModal.bind(this)} style={errorCustomStyles}>
 			<HeadText>{this.state.errorText}</HeadText>

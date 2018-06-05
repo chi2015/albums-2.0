@@ -7,6 +7,8 @@ import glamorous from "glamorous";
 
 import { observer } from "mobx-react";
 
+import { imgUrl } from '../../config';
+
 const AlbumItem = glamorous.div({
 	width: 225,
 	overflow: 'hidden',
@@ -51,7 +53,7 @@ const AlbumCopyright = glamorous.div({
 
 const Album = observer(({ item }) => (
 	<AlbumItem>
-        <AlbumCover><AlbumCoverImg src={"img/"+item.imgSrc} /></AlbumCover>
+        <AlbumCover><AlbumCoverImg src={imgUrl+item.imgSrc} /></AlbumCover>
         <AlbumInfo>
 			<AlbumArtist>{item.artist}</AlbumArtist>
 			<AlbumTitle>{item.title}</AlbumTitle>

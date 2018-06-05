@@ -12,7 +12,7 @@ export default class AlbumsListModel {
 	@computed
 	
 	get albumsList() {
-		return this.albums.filter(album => album.year == this.year && album.month == this.month);
+		return this.albums.filter(album => (album.year == this.year || this.year == "0") && (album.month == this.month || this.month == "00"));
 	}
 	
 	get albumsCount() {
@@ -21,8 +21,14 @@ export default class AlbumsListModel {
 	
 	@action
 	addAlbum(data) {
-		this.albums.push(new AlbumModel(data));
+		if (!this.getAlbumById(data.id)) this.albums.push(new AlbumModel(data));
+		console.log('date:', this.year, this.month);
 		console.log('albums list', this.albumsList);
+	}
+
+	getAlbumById(id) {
+		let ret = this.albums.filter(album => album.id == id);
+		return ret.length ? ret[0] : false;
 	}
 
 	constructor(year, month) {

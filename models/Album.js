@@ -28,7 +28,7 @@ export default class AlbumModel {
 		this.year = data.year;
 		this.month = +data.month < 10 ? "0"+data.month : data.month;
 		this.itunes_link = data.itunes_link;
-		this.copyright - data.copyright;
+		this.copyright = data.copyright;
 	}
 	
 		

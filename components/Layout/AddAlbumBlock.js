@@ -147,11 +147,10 @@ export default class AddAlbumBlock extends React.Component {
 		   req.attach("cover", file_input.files[0]);
 
 		 req.then((res)  => {  console.log("RES", res);
-			 if (res.body && res.body.ok) this.props.okCallback(res.body);
+		     this.setState({uploading : false});
+		 	 if (res.body && res.body.ok) this.props.okCallback(res.body);
 		     if (res.body && res.body.error) this.props.errorCallback(res.body.error, false);
 			 if (!res.body) this.props.errorCallback("Unknown Error", false);
-			 this.setState({uploading : false});
-			
 		 }).catch((err) => {  console.log("res", err); this.setState({uploading : false}); this.props.errorCallback("Unknown Error", true); });
 	}
 	
@@ -159,7 +158,7 @@ export default class AddAlbumBlock extends React.Component {
 		return (
 		<div>
 		<HeadText>Add Album</HeadText>
-			<ChooseDate year={this.state.year} month={this.state.month} changeDate={this.changeNewAlbumDate.bind(this)}/>
+			<ChooseDate year={this.state.year} month={this.state.month} changeDate={this.changeNewAlbumDate.bind(this)} mode="add"/>
 			<NewAlbumBlock>
 				<InputsBlock>
 					<InputBlock>Artist: <AddAlbumInput type="text" value={this.state.artist} onChange={this.changeArtist.bind(this)}/></InputBlock>

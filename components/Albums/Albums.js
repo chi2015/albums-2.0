@@ -80,7 +80,7 @@ const delCustomStyles = {
   
   render() {
     
-    var list = this.props.albumsStore.albums.filter(album => album.year == this.props.albumsStore.year && album.month == this.props.albumsStore.month).map(item => <Album key={item.id} item={item} openDelModal={function() { this.openDelModal(item);}.bind(this)}/>);
+    var list = this.props.albumsStore.albums.filter(album => (this.props.albumsStore.year == "0" || album.year == this.props.albumsStore.year) && (this.props.albumsStore.month == "00" || album.month == this.props.albumsStore.month)).map(item => <Album key={item.id} item={item} openDelModal={function() { this.openDelModal(item);}.bind(this)}/>);
     
     return (
       <AlbumsBlock>

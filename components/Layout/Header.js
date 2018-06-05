@@ -67,7 +67,7 @@ export default class Header extends React.Component {
   
   getAlbums() {
     this.props.albumsStore.month = this.state.month;
-	this.props.albumsStore.year = this.state.year;
+		this.props.albumsStore.year = this.state.year;
     this.props.changeDate();
   	this.closeDateModal();
   }
@@ -84,10 +84,10 @@ export default class Header extends React.Component {
 			<AddButton onClick={this.props.add}/>
 		</HeaderTitle>
 		<AlbumsButton buttonType="standard" onClick={this.openDateModal.bind(this)}>
-			<DateMonth month={this.props.albumsStore.month}/> {this.props.albumsStore.year}
+			<DateMonth month={this.props.albumsStore.month}/> {this.props.albumsStore.year > 0 ? this.props.albumsStore.year : (this.props.albumsStore.month!="00" ? "" : "All albums")}
 		</AlbumsButton>
 		<Modal isOpen={this.state.dateModalOpen} onRequestClose={this.closeDateModal.bind(this)} style={customStyles}>
-			<ChooseDate year={this.state.year} month={this.state.month} changeDate={this.changeDate.bind(this)}/>
+			<ChooseDate year={this.state.year} month={this.state.month} changeDate={this.changeDate.bind(this)} mode="list"/>
 			<AlbumsButton onClick={this.getAlbums.bind(this)}>OK</AlbumsButton>
 		</Modal>
 	  </HeaderBlock>

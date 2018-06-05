@@ -5,7 +5,8 @@ import React from "react";
 export default class DateMonth extends React.Component {
   getMonthStr() {
 	  switch (parseInt(this.props.month)) {
-		  case 1: return "January";
+			case 0: return this.props.mode == "option" ? "All months" : "";
+			case 1: return "January";
 		  case 2: return "February";
 		  case 3: return "March";
 		  case 4: return "April";
