@@ -53,7 +53,7 @@ const AlbumCopyright = glamorous.div({
 
 const Album = observer(({ item }) => (
 	<AlbumItem>
-        <AlbumCover><AlbumCoverImg src={imgUrl+item.imgSrc} /></AlbumCover>
+        <AlbumCover><AlbumCoverImg src={imgUrl+item.imgSrc} onError={(e)=>{item.cover = false; e.target.src=imgUrl+"cd1.jpg";}}/></AlbumCover>
         <AlbumInfo>
 			<AlbumArtist>{item.artist}</AlbumArtist>
 			<AlbumTitle>{item.title}</AlbumTitle>
