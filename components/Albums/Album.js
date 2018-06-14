@@ -52,7 +52,7 @@ const AlbumCopyright = glamorous.div({
 });
 
 const Album = observer(({ item }) => (
-	<AlbumItem>
+			<AlbumItem onDoubleClick={item.openEditModal}>
         <AlbumCover><AlbumCoverImg src={imgUrl+item.imgSrc} onError={(e)=>{item.cover = false; e.target.src=imgUrl+"cd1.jpg";}}/></AlbumCover>
         <AlbumInfo>
 			<AlbumArtist>{item.artist}</AlbumArtist>

@@ -72,7 +72,9 @@ export default class Layout extends React.Component {
   		uploading : false,
   		addModalOpen : false,
   		errorModalOpen : false,
-  		errorText : ""
+		  errorText : "",
+		  addModalMode : "add",
+		  editedAlbum : false
   	}
   }
   
@@ -119,8 +121,12 @@ export default class Layout extends React.Component {
   }
 
   addCallbackOk(res) {
-	albumsStore.year = year;
+	albumsStore.year = res.year;
 	albumsStore.month = res.month;
+	if (this.state.editedAlbum) {
+		delete res['ok'];
+		albumsStore.editAlbum(res);
+	}
 	this.list();
 	this.closeAddModal();
   }
@@ -139,7 +145,11 @@ export default class Layout extends React.Component {
   }
   
   openAddModal() {
-	  this.setState({addModalOpen : true});
+	  this.setState({addModalOpen : true, addModalMode : 'add', editedAlbum : false});
+  }
+
+  openEditModal(item) {
+	  this.setState({addModalOpen: true, addModalMode : 'edit', editedAlbum : item});
   }
   
   closeAddModal() {
@@ -162,10 +172,10 @@ export default class Layout extends React.Component {
     return (
       <LayoutBlock>
       	<Header changeDate={this.changeDate.bind(this)} albumsStore={albumsStore} add={this.openAddModal.bind(this)}/>
-      	<Content albumsStore={albumsStore} add={this.openAddModal.bind(this)} loading={this.state.loading} okDelCallback={this.delCallbackOk.bind(this)} errorDelCallback={this.delCallbackError.bind(this)}/>
+      	<Content albumsStore={albumsStore} add={this.openAddModal.bind(this)} loading={this.state.loading} openEditModal={this.openEditModal.bind(this)} okDelCallback={this.delCallbackOk.bind(this)} errorDelCallback={this.delCallbackError.bind(this)}/>
       	<Footer/>
       	<Modal isOpen={this.state.addModalOpen} onRequestClose={this.closeAddModal.bind(this)} style={customStyles}>
-			<AddAlbumBlock year={albumsStore.year} month={albumsStore.month} okCallback={this.addCallbackOk.bind(this)} errorCallback={this.addCallbackError.bind(this)}/>
+			<AddAlbumBlock year={albumsStore.year} month={albumsStore.month} okCallback={this.addCallbackOk.bind(this)} errorCallback={this.addCallbackError.bind(this)} addModalMode={this.state.addModalMode} editedAlbum={this.state.editedAlbum}/>
 		</Modal>
 		<Modal isOpen={this.state.errorModalOpen} onRequestClose={this.closeErrorModal.bind(this)} style={errorCustomStyles}>
 			<HeadText>{this.state.errorText}</HeadText>

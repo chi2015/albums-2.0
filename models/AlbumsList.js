@@ -26,6 +26,12 @@ export default class AlbumsListModel {
 		console.log('albums list', this.albumsList);
 	}
 
+	editAlbum(data) {
+		this.albums.forEach((album, index) => {
+			if (data.id == album.id) this.albums[index].edit(data);
+		});
+	}
+
 	getAlbumById(id) {
 		let ret = this.albums.filter(album => album.id == id);
 		return ret.length ? ret[0] : false;

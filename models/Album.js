@@ -1,4 +1,4 @@
-import { observable, computed } from "mobx";
+import { observable, computed, action } from "mobx";
 
 export default class AlbumModel {
 	id = Math.random();
@@ -29,6 +29,17 @@ export default class AlbumModel {
 		this.month = +data.month < 10 ? "0"+data.month : data.month;
 		this.itunes_link = data.itunes_link;
 		this.copyright = data.copyright;
+	}
+
+	@action
+	edit(data) {
+		if (data.title) this.title = data.title;
+		if (data.artist) this.artist = data.artist;
+		if (data.cover) this.cover = data.cover;
+		if (data.year) this.year = data.year;
+		if (data.month) this.month = data.month;
+		if (data.itunes_link) this.itunes_link = data.itunes_link;
+		if (data.copyright) this.copyright = data.copyright;
 	}
 	
 		

@@ -98,6 +98,68 @@
 		return ["ok" => true, "year" => $year, "month" => $month];
 		
 	}
+
+	function albums_edit($data) {
+		$fields = ['artist', 'title', 'year', 'month', 'itunes_link', 'copyright'];
+		
+		foreach ($fields as $field)
+			if (!isset($data[$field])) return ['error' => 'No field "'.$field.'" specified'];
+
+		if (!preg_match('/^[0-9]{4}$/', $data['year'])) return ['error' => 'Wrong playlist year format'];
+		if (!preg_match('/^[0-9]{2}$/', $data['month'])) return ['error' => 'Wrong playlist month format'];
+		if ($data['artist']=='') return ['error' => 'No artist specified'];
+		if ($data['title']=='') return ['error' => 'No title specified'];
+		
+		$year = $data['year'];
+		$month = $data['month'];
+		$data['year'] = intval($data['year']);
+		$data['month'] = intval($data['month']);
+
+		if (isset($_FILES['cover'])) {
+			if (!is_dir("../img")) mkdir("../img");
+			$fileBaseName = $data['year'].'_'.$data['month'].'_'.time();
+			$filePath = '../img/'.$fileBaseName;
+			move_uploaded_file($_FILES['cover']['tmp_name'], $filePath);
+			$fields[] = 'cover';
+			$data['cover'] = $fileBaseName;
+		}
+
+		global $host, $user, $pass, $dbname;
+        
+        $link = mysql_connect($host, $user, $pass);
+        if (!$link) return ["error" => "Could not connect : " . mysql_error()];
+        
+        $sel_db = mysql_select_db($dbname);
+        if (!$sel_db) {
+        	mysql_close($link);
+        	return ["error" => "Could not select database"];
+        }
+        
+		$values = [];
+		
+        foreach ($fields as $field) {
+			$values[] = "$field = '".htmlspecialchars($data[$field], ENT_QUOTES)."'";
+		}
+
+		$set_str = 'SET '.join(", ", $values);
+		
+		$query = "UPDATE albums $set_str WHERE id = ".$data['id'];
+
+        $result = mysql_query($query);
+		if (!$result)
+		{
+			$mysql_err = mysql_error();
+			mysql_close($link);	
+			return ["error" => "Update query failed $query_insert_playlist: ".$mysql_err];
+		}
+		
+		mysql_close($link);	
+		unset($data["action"]);
+		$data["ok"] = true;
+		$data["year"] = $year;
+		$data["month"] = $month;
+		return $data;
+	}
 	
 	function albums_delete($id , $pass) {
 		

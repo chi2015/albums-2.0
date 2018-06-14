@@ -6,6 +6,7 @@ import glamorous from 'glamorous';
 import AlbumsButton from '../glamorous/AlbumsButton';
 import request from 'superagent';
 import { serverUrl } from '../../config';
+import { imgUrl } from '../../config';
 
 const NewAlbumBlock = glamorous.div({
 	display: 'flex',
@@ -85,8 +86,20 @@ export default class AddAlbumBlock extends React.Component {
 	
 	constructor(props) {
 		super(props);
-		
+		if (props.addModalMode == 'edit') 
 		this.state = {
+			id : props.editedAlbum.id,
+			year: props.editedAlbum.year,
+			month: props.editedAlbum.month,
+			uploading: false,
+			title: props.editedAlbum.title,
+			artist: props.editedAlbum.artist,
+			itunes_link: props.editedAlbum.itunes_link,
+			copyright: props.editedAlbum.copyright,
+			cover: props.editedAlbum.cover ? imgUrl + props.editedAlbum.cover : false
+		}
+		
+		else this.state = {
 			year: props.year,
 			month: props.month,
 			uploading: false,
@@ -135,16 +148,17 @@ export default class AddAlbumBlock extends React.Component {
 		else this.setState({ cover : false });
 	}
 	
-	add() { 
+	save() { 
 		this.setState({ uploading : true });
 	    let req = request.post(serverUrl);
 	    let file_input = document.getElementById('cover_file');
-	    req.field('action','add');
-	    
+	    req.field('action', this.props.addModalMode);
+
 	    for (let param in this.state)
 		  if (param!="cover" && param!="uploading") req.field(param , this.state[param]);
 	      if (file_input.files && file_input.files[0])
 		   req.attach("cover", file_input.files[0]);
+		  else if (this.props.editedAlbum && this.props.editedAlbum.cover) req.field("cover", this.props.editedAlbum.cover);
 
 		 req.then((res)  => {  console.log("RES", res);
 		     this.setState({uploading : false});
@@ -157,7 +171,7 @@ export default class AddAlbumBlock extends React.Component {
 	render() {
 		return (
 		<div>
-		<HeadText>Add Album</HeadText>
+		<HeadText>{this.props.addModalMode == 'edit' ? 'Edit Album' : 'Add Album'}</HeadText>
 			<ChooseDate year={this.state.year} month={this.state.month} changeDate={this.changeNewAlbumDate.bind(this)} mode="add"/>
 			<NewAlbumBlock>
 				<InputsBlock>
@@ -177,8 +191,8 @@ export default class AddAlbumBlock extends React.Component {
 				
 			</NewAlbumBlock>
 			<input name="cover" type="file" accept=".jpg, .png, .jpeg, .gif" style={{visibility : 'hidden', width : '0', height : '0'}} id="cover_file" onChange={this.openCoverFile.bind(this)} />
-			{this.state.uploading ? <HeadText>Uploading new album...</HeadText> : 
-				<AlbumsButton onClick={this.add.bind(this)}>Add</AlbumsButton>}
+			{this.state.uploading ? <HeadText>Saving album...</HeadText> : 
+				<AlbumsButton onClick={this.save.bind(this)}>{this.props.addModalMode == 'edit' ? 'Save' : 'Add'}</AlbumsButton>}
 		</div>
 		);
     }
