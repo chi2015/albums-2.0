@@ -96,7 +96,8 @@ export default class AddAlbumBlock extends React.Component {
 			artist: props.editedAlbum.artist,
 			itunes_link: props.editedAlbum.itunes_link,
 			copyright: props.editedAlbum.copyright,
-			cover: props.editedAlbum.cover ? imgUrl + props.editedAlbum.cover : false
+			cover: props.editedAlbum.cover ? imgUrl + props.editedAlbum.cover : false,
+			pass: ''
 		}
 		
 		else this.state = {
@@ -107,7 +108,8 @@ export default class AddAlbumBlock extends React.Component {
 			artist: '',
 			itunes_link: '',
 			copyright: '',
-			cover: false
+			cover: false,
+			pass: ''
 		}
 	}
 
@@ -129,6 +131,10 @@ export default class AddAlbumBlock extends React.Component {
 	
 	changeCopyright(e) {
 		this.setState({ copyright : e.target.value });
+	}
+
+	changePass(e) {
+		this.setState({ pass : e.target.value });
 	}
 	
 	browseCover() {
@@ -167,6 +173,20 @@ export default class AddAlbumBlock extends React.Component {
 			 if (!res.body) this.props.errorCallback("Unknown Error", false);
 		 }).catch((err) => {  console.log("res", err); this.setState({uploading : false}); this.props.errorCallback("Unknown Error", true); });
 	}
+
+	delAlbum() {
+		if (confirm("Delete this album? This action cannot be undo!")) {
+			request.post(serverUrl)
+	         .send('action=delete')
+	         .send('id='+this.state.id)
+	         .send('pass='+this.state.pass)
+	         .end(function(err, res) { console.log('del res', res);
+				if (res.body && res.body.ok) this.props.delCallbackOk(res.body);
+				if (res.body && res.body.error) this.props.delCallbackError(res.body.error);
+				if (!res.body) this.props.delCallbackError("Unknown error");
+			 }.bind(this));
+		}
+	}
 	
 	render() {
 		return (
@@ -179,6 +199,7 @@ export default class AddAlbumBlock extends React.Component {
 					<InputBlock>Title: <AddAlbumInput type="text" value={this.state.title} onChange={this.changeTitle.bind(this)}/></InputBlock>
 					<InputBlock>iTunes Link: <AddAlbumInput type="text" value={this.state.itunes_link} onChange={this.changeItunesLink.bind(this)}/></InputBlock>
 					<InputBlock>Copyright: <AddAlbumInput type="text" value={this.state.copyright} onChange={this.changeCopyright.bind(this)}/></InputBlock>
+					<InputBlock>Password: <AddAlbumInput type="text" value={this.state.pass} onChange={this.changePass.bind(this)}/></InputBlock>
 				</InputsBlock>
 				{this.state.cover ? 
 					<AlbumCover onClick={this.browseCover}><AlbumCoverImg src={this.state.cover}/></AlbumCover>
@@ -193,6 +214,7 @@ export default class AddAlbumBlock extends React.Component {
 			<input name="cover" type="file" accept=".jpg, .png, .jpeg, .gif" style={{visibility : 'hidden', width : '0', height : '0'}} id="cover_file" onChange={this.openCoverFile.bind(this)} />
 			{this.state.uploading ? <HeadText>Saving album...</HeadText> : 
 				<AlbumsButton onClick={this.save.bind(this)}>{this.props.addModalMode == 'edit' ? 'Save' : 'Add'}</AlbumsButton>}
+			{this.props.addModalMode == 'edit' ? <AlbumsButton buttonType="danger" onClick={this.delAlbum.bind(this)}>Delete</AlbumsButton> : ''}
 		</div>
 		);
     }

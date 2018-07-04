@@ -10,6 +10,6 @@ $dbname = "vh272659_playlist";
 $user = "vh272659_dbuser";
 $pass = "**********";
 
-$delete_pass = "*********";
+$edit_pass = "*********";
 
 ?>

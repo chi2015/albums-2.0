@@ -27,7 +27,7 @@ const customStyles = {
 	content : {
 		top                   : '50%',
 		left                  : '50%',
-	    maxHeight            : '380px',
+	    maxHeight            : '500px',
 	    minWidth : '450px',
 		right                 : 'auto',
 		bottom                : 'auto',
@@ -136,8 +136,10 @@ export default class Layout extends React.Component {
 	  this.setState({ errorModalOpen : true, errorText : error });
   }
   
-  delCallbackOk() {
+  delCallbackOk(res) {
+	  albumsStore.deleteAlbum(res.id);
 	  this.list();
+	  this.closeAddModal();
   }
   
   delCallbackError(error) {
@@ -172,10 +174,17 @@ export default class Layout extends React.Component {
     return (
       <LayoutBlock>
       	<Header changeDate={this.changeDate.bind(this)} albumsStore={albumsStore} add={this.openAddModal.bind(this)}/>
-      	<Content albumsStore={albumsStore} add={this.openAddModal.bind(this)} loading={this.state.loading} openEditModal={this.openEditModal.bind(this)} okDelCallback={this.delCallbackOk.bind(this)} errorDelCallback={this.delCallbackError.bind(this)}/>
+      	<Content albumsStore={albumsStore} add={this.openAddModal.bind(this)} loading={this.state.loading} openEditModal={this.openEditModal.bind(this)}/>
       	<Footer/>
       	<Modal isOpen={this.state.addModalOpen} onRequestClose={this.closeAddModal.bind(this)} style={customStyles}>
-			<AddAlbumBlock year={albumsStore.year} month={albumsStore.month} okCallback={this.addCallbackOk.bind(this)} errorCallback={this.addCallbackError.bind(this)} addModalMode={this.state.addModalMode} editedAlbum={this.state.editedAlbum}/>
+			<AddAlbumBlock year={albumsStore.year} 
+						   month={albumsStore.month} 
+						   okCallback={this.addCallbackOk.bind(this)} 
+						   errorCallback={this.addCallbackError.bind(this)} 
+						   delCallbackOk={this.delCallbackOk.bind(this)}
+						   delCallbackError={this.delCallbackError.bind(this)}
+						   addModalMode={this.state.addModalMode} 
+						   editedAlbum={this.state.editedAlbum}/>
 		</Modal>
 		<Modal isOpen={this.state.errorModalOpen} onRequestClose={this.closeErrorModal.bind(this)} style={errorCustomStyles}>
 			<HeadText>{this.state.errorText}</HeadText>

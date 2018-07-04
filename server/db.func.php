@@ -45,6 +45,9 @@
     }
    
     function albums_add($data) { 
+		global $edit_pass;
+		if ($edit_pass!==$data['pass']) return ['error' => 'Wrong password'];
+		
 		$fields = ['artist', 'title', 'year', 'month', 'itunes_link', 'copyright'];
 		
 		foreach ($fields as $field)
@@ -100,6 +103,9 @@
 	}
 
 	function albums_edit($data) {
+		global $edit_pass;
+		if ($edit_pass!==$data['pass']) return ['error' => 'Wrong password'];
+		
 		$fields = ['artist', 'title', 'year', 'month', 'itunes_link', 'copyright'];
 		
 		foreach ($fields as $field)
@@ -163,8 +169,8 @@
 	
 	function albums_delete($id , $pass) {
 		
-		global $delete_pass;
-		if ($delete_pass!==$pass) return ['error' => 'Wrong password'];
+		global $edit_pass;
+		if ($edit_pass!==$pass) return ['error' => 'Wrong password'];
 		
 		$id = intval($id);
 		if ($id <= 0) return ["error" => "Wrong album id specified"];
@@ -191,7 +197,7 @@
 		}
 	
 		mysql_close($link);		
-		return ['ok' => true];
+		return ['ok' => true, 'id' => $id];
 		
 	}
     

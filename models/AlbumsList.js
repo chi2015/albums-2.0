@@ -32,6 +32,10 @@ export default class AlbumsListModel {
 		});
 	}
 
+	deleteAlbum(id) {
+		this.albums = this.albums.filter(album => album.id != id);
+	}
+
 	getAlbumById(id) {
 		let ret = this.albums.filter(album => album.id == id);
 		return ret.length ? ret[0] : false;
