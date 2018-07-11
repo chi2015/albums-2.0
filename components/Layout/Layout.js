@@ -27,8 +27,8 @@ const customStyles = {
 	content : {
 		top                   : '50%',
 		left                  : '50%',
-	    maxHeight            : '500px',
-	    minWidth : '450px',
+	  //  maxHeight            : '500px',
+	  //  minWidth : '450px',
 		right                 : 'auto',
 		bottom                : 'auto',
 		textAlign   :          'center',

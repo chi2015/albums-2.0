@@ -6,10 +6,14 @@ import DateMonth from "../DateMonth";
 import AlbumsButton from '../glamorous/AlbumsButton';
 import AddButton from "../glamorous/AddButton";
 import glamorous from "glamorous";
+import MediaQueries from "../glamorous/MediaQueries";
 
 
 const Heading = glamorous.h1({
-	fontSize: 20
+	fontSize: 20,
+	[MediaQueries.phone]: {
+		fontSize: '4vw'
+	}
 });
 
 const HeaderBlock = glamorous.div({
@@ -32,7 +36,6 @@ const HeaderTitle = glamorous.div({
 	content : {
 		top                   : '50%',
 		left                  : '50%',
-	    maxHeight            : '70px',
 		right                 : 'auto',
 		bottom                : 'auto',
 		textAlign   :          'center',

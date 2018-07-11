@@ -7,12 +7,14 @@ import AlbumsButton from '../glamorous/AlbumsButton';
 import request from 'superagent';
 import { serverUrl } from '../../config';
 import { imgUrl } from '../../config';
+import MediaQueries from "../glamorous/MediaQueries";
 
 const NewAlbumBlock = glamorous.div({
 	display: 'flex',
 	flexDirection: 'row',
 	justifyContent: 'space-between',
-	alignItems: 'center'
+	alignItems: 'center',
+	flexWrap: 'wrap',
 });
 
 const InputsBlock = glamorous.div({
@@ -26,15 +28,24 @@ const InputsBlock = glamorous.div({
 });
 
 const InputBlock = glamorous.div({
-	textAlign: 'left'
+	textAlign: 'left',
+	fontSize: 16,
+	[MediaQueries.phone]: {
+		fontSize: '2.5vw'
+	}
+
 });
 
 const AddAlbumInput = glamorous.input({
 	display: 'block',
-	margin: '5px 0 15px',
+	margin: '5px 2px 15px',
 	width: 170,
 	height: 24,
-	fontSize: 16
+	fontSize: 16,
+	[MediaQueries.phone]: {
+		fontSize: '2.5vw',
+		height: '3.75vw'
+	}
 });
 
 const AlbumCover = glamorous.div({
