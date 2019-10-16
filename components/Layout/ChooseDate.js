@@ -16,15 +16,15 @@ export default class ChooseDate extends React.Component {
     	this.props.changeDate(this.props.year, e.target.value);
     }
     
-    handleChangeYear(e) {
+    handleChangeYear(e) { console.log('val', e.target.value);
     	this.props.changeDate(e.target.value, this.props.month);
     }
     
   render() {
-    
+    const currentYear = new Date().getFullYear();
     var year_list = [];
     if (this.state.mode == "list") year_list.push(<option key={0} value={0}>All years</option>);
-    for (var year=2017; year>=2000; year--) year_list.push(<option key={year} value={year}>{year}</option>);
+    for (var year=currentYear; year>=2000; year--) year_list.push(<option key={year} value={year}>{year}</option>);
     var month_list = [];
     for (var month=this.state.mode == "list" ? 0 : 1; month<=12; month++) {
 		var month_str = month < 10 ? "0"+month : month;

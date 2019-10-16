@@ -87,7 +87,7 @@ export default class Layout extends React.Component {
   }
   
   list() {
-
+console.log('list', albumsStore.year, albumsStore.month);
 	this.setState({ loading: true});
 	 if (albumsStore.addedDates[albumsStore.year] && albumsStore.addedDates[albumsStore.year][albumsStore.month]) {
 		this.setState({ loading: false}); 
@@ -99,20 +99,11 @@ export default class Layout extends React.Component {
 	         .send('month='+albumsStore.month)
 	         .end(function(err, res) { console.log('res', res);
 				 if (res.body && res.body.ok && Array.isArray(res.body.albums)) {
-					if (albumsStore.year == "0") 
-						for(let y=2000; y<=2017; y++) {
-							if (!albumsStore.addedDates[""+y]) albumsStore.addedDates[""+y] = {};
-							albumsStore.addedDates[""+y][albumsStore.month] = true;
-						}
-					if (!albumsStore.addedDates[albumsStore.year]) albumsStore.addedDates[albumsStore.year] = {};
-					if (albumsStore.month == "00")
-						for (let m=1; m<=12; m++)
-							albumsStore.addedDates[albumsStore.year][m < 10 ? "0"+m : m] = true;
-					 albumsStore.addedDates[albumsStore.year][albumsStore.month] = true;
-					 res.body.albums.forEach(function(album) {
-						 console.log('album', album);
-						 albumsStore.addAlbum(album);
-					 });
+					albumsStore.addDate(albumsStore.year, albumsStore.month);
+					res.body.albums.forEach(function(album) {
+						console.log('album', album);
+						albumsStore.addAlbum(album);
+					});
 				 }
 				 else this.setState({ errorModalOpen : true, errorText : "Error loading albums" });
 				 
@@ -166,7 +157,7 @@ export default class Layout extends React.Component {
 	  this.setState({errorModalOpen : false});
   }
   
-  changeDate() {
+  changeDate() { console.log('change date');
   	this.list();
   }
   

@@ -16,9 +16,15 @@ const AlbumsBlock = glamorous.div({
 
 
 @observer class Albums extends React.Component {  
+  componentDidMount() {
+   /* this.observer = new IntersectionObserver(
+
+    );*/
+  }
+  
   render() {
     
-    var list = this.props.albumsStore.albums.filter(album => (this.props.albumsStore.year == "0" || album.year == this.props.albumsStore.year) && (this.props.albumsStore.month == "00" || album.month == this.props.albumsStore.month)).map((item) => { item.openEditModal = function() { this.props.openEditModal(item);}.bind(this); return (<Album key={item.id} item={item}/>)});
+    var list = this.props.albumsStore.albumsList(this.props.albumsStore.year, this.props.albumsStore.month).map((item) => { item.openEditModal = function() { this.props.openEditModal(item);}.bind(this); return (<Album key={item.id} item={item}/>)});
     
     return (
       <AlbumsBlock>
