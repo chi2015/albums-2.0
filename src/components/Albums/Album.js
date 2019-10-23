@@ -2,7 +2,6 @@ import React from "react";
 
 import DateMonth from "../DateMonth";
 import AlbumsButton from '../glamorous/AlbumsButton';
-import Modal from "react-modal";
 import glamorous from "glamorous";
 
 import { observer } from "mobx-react";
@@ -64,33 +63,6 @@ const Album = observer(({ item }) => (
       </AlbumItem>
 ));
 
-/*export default class Album extends React.Component {
-  
-  imgSrc() {
-	  return this.props.albumItem.cover || "cd1.jpg";
-  }
-  
-  copyrightString() {
-	  return this.props.albumItem.copyright ? "\u2117"+" "+this.props.albumItem.copyright : "";
-	  
-  }
-  
-  render() {
-    return (
-      <AlbumItem>
-        <AlbumCover onDoubleClick={this.props.openDelModal}><AlbumCoverImg src={"img/"+this.imgSrc()} /></AlbumCover>
-        <AlbumInfo>
-			<AlbumArtist>{this.props.albumItem.artist}</AlbumArtist>
-			<AlbumTitle>{this.props.albumItem.title}</AlbumTitle>
-			<AlbumDate><DateMonth month={this.props.albumItem.month}/> {this.props.albumItem.year}</AlbumDate>
-        </AlbumInfo>
-        <ItunesLink link={this.props.albumItem.itunes_link}/>
-        <AlbumCopyright>{this.copyrightString()}</AlbumCopyright>
-      </AlbumItem>
-    );
-  }
-}
-*/
 export default Album;
 
 class ItunesLink extends React.Component {
