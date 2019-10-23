@@ -15,7 +15,7 @@ const AlbumsBlock = glamorous.div({
 });
 
 
-@observer class Albums extends React.Component {  
+const Albums = observer(class Albums extends React.Component {  
   componentDidMount() {
    /* this.observer = new IntersectionObserver(
 
@@ -32,6 +32,6 @@ const AlbumsBlock = glamorous.div({
       </AlbumsBlock>
     );
   }
-}
+});
 
 export default Albums;

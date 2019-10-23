@@ -1,4 +1,4 @@
-import { observable, computed, action } from "mobx";
+import { observable, action, decorate } from "mobx";
 
 import AlbumModel from "./Album";
 
@@ -7,12 +7,11 @@ const ALL_MONTHS = "00";
 
 export default class AlbumsListModel {
 	id = Math.random();
-	@observable albums = [];
-	@observable year;
-	@observable month;
-	@observable addedDates = {};
-	
-	@action
+	albums = [];
+	year;
+	month;
+	addedDates = {};
+
 	albumsList(year, month) {
 		return this.albums.filter(album => (album.year == year || year == ALL_YEARS) && (album.month == month || month == ALL_MONTHS));
 	}
@@ -60,3 +59,17 @@ export default class AlbumsListModel {
 		this.addedDates = {};
 	}
 }
+
+decorate(AlbumsListModel, {
+	albums: observable,
+	year: observable,
+	month: observable,
+	addedDates: observable,
+	albumsList: action,
+	albumsCount: action,
+	addDate: action,
+	addAlbum: action,
+	editAlbum: action,
+	deleteAlbum: action,
+    getAlbumById: action
+});

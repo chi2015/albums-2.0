@@ -186,7 +186,7 @@ export default class AddAlbumBlock extends React.Component {
 	}
 
 	delAlbum() {
-		if (confirm("Delete this album? This action cannot be undo!")) {
+		if (window.confirm("Delete this album? This action cannot be undo!")) {
 			request.post(serverUrl)
 	         .send('action=delete')
 	         .send('id='+this.state.id)

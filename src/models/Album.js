@@ -1,17 +1,15 @@
-import { observable, computed, action } from "mobx";
+import { observable, computed, action, decorate } from "mobx"
 
 export default class AlbumModel {
 	id = Math.random();
-	@observable id;
-	@observable title;
-	@observable artist;
-	@observable cover;
-	@observable year;
-	@observable month;
-	@observable itunes_link;
-	@observable copyright;
-	
-	@computed
+	title;
+	artist;
+	cover;
+	year;
+	month;
+	itunes_link;
+	copyright;
+
 	get imgSrc() {
 		return this.cover || "cd1.jpg";
 	}
@@ -31,7 +29,6 @@ export default class AlbumModel {
 		this.copyright = data.copyright;
 	}
 
-	@action
 	edit(data) {
 		if (data.title) this.title = data.title;
 		if (data.artist) this.artist = data.artist;
@@ -41,6 +38,18 @@ export default class AlbumModel {
 		if (data.itunes_link) this.itunes_link = data.itunes_link;
 		if (data.copyright) this.copyright = data.copyright;
 	}
-	
-		
 }
+
+decorate(AlbumModel, {
+	id: observable,
+	title: observable,
+	artist: observable,
+	cover: observable,
+	year: observable,
+	month: observable,
+	itunes_link: observable,
+	copyright: observable,
+	imgSrc: computed,
+	copyrightString: computed,
+	edit: action
+});
