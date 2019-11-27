@@ -98,8 +98,12 @@
 		}
 		
 		mysql_close($link);	
-		return ["ok" => true, "year" => $year, "month" => $month];
-		
+		unset($data["action"]);
+		$data["id"] = mysql_insert_id();
+		$data["ok"] = true;
+		$data["year"] = $year;
+		$data["month"] = $month;
+		return $data;
 	}
 
 	function albums_edit($data) {

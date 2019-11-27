@@ -12,11 +12,11 @@ export default class ChooseDate extends React.Component {
 		this.setState({ year : nextProps.year, month : nextProps.month });
 	}
 
-    handleChangeMonth(e) { console.log('val', e.target.value);
+    handleChangeMonth(e) {
     	this.props.changeDate(this.props.year, e.target.value);
     }
     
-    handleChangeYear(e) { console.log('val', e.target.value);
+    handleChangeYear(e) {
     	this.props.changeDate(e.target.value, this.props.month);
     }
     

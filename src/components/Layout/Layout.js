@@ -10,10 +10,8 @@ import AlbumsButton from '../glamorous/AlbumsButton';
 import AddAlbumBlock from "./AddAlbumBlock";
 import HeadText from '../glamorous/HeadText';
 
-import request from 'superagent';
 import glamorous from 'glamorous';
-
-import { serverUrl } from '../../config';
+import request from '../../request';
 
 import AlbumsListModel from "../../models/AlbumsList.js";
 
@@ -87,42 +85,44 @@ export default class Layout extends React.Component {
   }
   
   list() {
-console.log('list', albumsStore.year, albumsStore.month);
-	this.setState({ loading: true});
+	this.setState({ loading: true });
 	 if (albumsStore.addedDates[albumsStore.year] && albumsStore.addedDates[albumsStore.year][albumsStore.month]) {
-		this.setState({ loading: false}); 
+		this.setState({ loading: false }); 
 		return;
-	 }
-	  request.post(serverUrl)
-	         .send('action=list')
-	         .send('year='+albumsStore.year)
-	         .send('month='+albumsStore.month)
-	         .end(function(err, res) { console.log('res', res);
-				 if (res.body && res.body.ok && Array.isArray(res.body.albums)) {
-					albumsStore.addDate(albumsStore.year, albumsStore.month);
-					res.body.albums.forEach(function(album) {
-						console.log('album', album);
-						albumsStore.addAlbum(album);
-					});
-				 }
-				 else this.setState({ errorModalOpen : true, errorText : "Error loading albums" });
-				 
-				 this.setState({ loading: false});
-			 }.bind(this));
+	}
+	const params = {
+		action: 'list',
+		year: albumsStore.year,
+		month: albumsStore.month
+	}
+	request(params).then(
+		data => {
+			if (data && data.ok && Array.isArray(data.albums)) {
+				albumsStore.addDate(albumsStore.year, albumsStore.month);
+				data.albums.forEach(album => { albumsStore.addAlbum(album); });
+			} else {
+				this.setState({ 
+					errorModalOpen : true, 
+					errorText : "Error loading albums" 
+				});
+			}
+			this.setState({ loading: false });
+		}
+	);
   }
 
   addCallbackOk(res) {
 	albumsStore.year = res.year;
 	albumsStore.month = res.month;
-	if (this.state.editedAlbum) {
-		delete res['ok'];
-		albumsStore.editAlbum(res);
-	}
+	delete res['ok'];
+	delete res['pass'];
+	if (this.state.editedAlbum) albumsStore.editAlbum(res);
+	else albumsStore.addAlbum(res);
 	this.list();
 	this.closeAddModal();
   }
   
-  addCallbackError(error, close) { console.log('error', error);
+  addCallbackError(error, close) {
 	  if (close) this.closeAddModal();
 	  this.setState({ errorModalOpen : true, errorText : error });
   }
@@ -157,7 +157,7 @@ console.log('list', albumsStore.year, albumsStore.month);
 	  this.setState({errorModalOpen : false});
   }
   
-  changeDate() { console.log('change date');
+  changeDate() {
   	this.list();
   }
   

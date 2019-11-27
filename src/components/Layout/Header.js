@@ -68,7 +68,7 @@ export default class Header extends React.Component {
     this.setState({dateModalOpen: false}); 
   }
   
-  getAlbums() { console.log('get albums', this.state);
+  getAlbums() {
     this.props.albumsStore.month = this.state.month;
 	this.props.albumsStore.year = this.state.year;
     this.props.changeDate();

@@ -30,11 +30,8 @@ export default class AlbumsListModel {
 			}
 		}
 	}
-
 	addAlbum(data) {
 		if (!this.getAlbumById(data.id)) this.albums.push(new AlbumModel(data));
-		console.log('date:', this.year, this.month);
-		console.log('albums list', this.albumsList);
 	}
 
 	editAlbum(data) {

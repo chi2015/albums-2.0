@@ -4,7 +4,8 @@ import HeadText from '../glamorous/HeadText';
 import ChooseDate from "./ChooseDate";
 import glamorous from 'glamorous';
 import AlbumsButton from '../glamorous/AlbumsButton';
-import request from 'superagent';
+import superagent from 'superagent';
+import request from '../../request';
 import { serverUrl } from '../../config';
 import { imgUrl } from '../../config';
 import MediaQueries from "../glamorous/MediaQueries";
@@ -167,7 +168,8 @@ export default class AddAlbumBlock extends React.Component {
 	
 	save() { 
 		this.setState({ uploading : true });
-	    let req = request.post(serverUrl);
+		
+		let req = superagent.post(serverUrl);
 	    let file_input = document.getElementById('cover_file');
 	    req.field('action', this.props.addModalMode);
 
@@ -177,25 +179,26 @@ export default class AddAlbumBlock extends React.Component {
 		   req.attach("cover", file_input.files[0]);
 		  else if (this.props.editedAlbum && this.props.editedAlbum.cover) req.field("cover", this.props.editedAlbum.cover);
 
-		 req.then((res)  => {  console.log("RES", res);
+		 req.then((res)  => {
 		     this.setState({uploading : false});
 		 	 if (res.body && res.body.ok) this.props.okCallback(res.body);
 		     if (res.body && res.body.error) this.props.errorCallback(res.body.error, false);
 			 if (!res.body) this.props.errorCallback("Unknown Error", false);
-		 }).catch((err) => {  console.log("res", err); this.setState({uploading : false}); this.props.errorCallback("Unknown Error", true); });
+		 }).catch((err) => { this.setState({uploading : false}); this.props.errorCallback("Unknown Error", true); });
 	}
 
 	delAlbum() {
 		if (window.confirm("Delete this album? This action cannot be undo!")) {
-			request.post(serverUrl)
-	         .send('action=delete')
-	         .send('id='+this.state.id)
-	         .send('pass='+this.state.pass)
-	         .end(function(err, res) { console.log('del res', res);
-				if (res.body && res.body.ok) this.props.delCallbackOk(res.body);
-				if (res.body && res.body.error) this.props.delCallbackError(res.body.error);
-				if (!res.body) this.props.delCallbackError("Unknown error");
-			 }.bind(this));
+			const params = {
+				action: 'delete',
+				id: this.state.id,
+				pass: this.state.pass
+			};
+			request(params).then(data => {
+				if (data && data.ok) this.props.delCallbackOk(data);
+				if (data && data.error) this.props.delCallbackError(data.error);
+				if (!data) this.props.delCallbackError("Unknown error");
+			});
 		}
 	}
 	
