@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import Header from "./Header";
 import Content from "./Content";
@@ -12,8 +12,6 @@ import HeadText from '../glamorous/HeadText';
 
 import glamorous from 'glamorous';
 import request from '../../request';
-
-import AlbumsListModel from "../../models/AlbumsList.js";
 
 const LayoutBlock = glamorous.div({
 	margin: '0 auto',
@@ -54,136 +52,99 @@ const errorCustomStyles = {
 	}
 }
 
-let d = new Date();
-let year = d.getFullYear() - 1;
-let month = d.getMonth() + 1;
-if (month < 10) month = "0"+month;
-
-const albumsStore = new AlbumsListModel(year, month);
-window.store = albumsStore;
-
-export default class Layout extends React.Component {
-  constructor() {
-  	super();
-  	this.state = {
-  		loading : false,
-  		uploading : false,
-  		addModalOpen : false,
-  		errorModalOpen : false,
-		  errorText : "",
-		  addModalMode : "add",
-		  editedAlbum : false
+const Layout = () => {
+  const d = new Date();
+  const [year, setYear] = useState(d.getFullYear() - 1);
+  const [month, setMonth] = useState(`0${d.getMonth() + 1}`.slice(-2));
+  const [loading, setLoading] = useState(true);
+  const [modal, setModal] = useState(false);
+  const [mode, setMode] = useState('add');
+  const [error, setError] = useState(false);
+  const [errorText, setErrorText] = useState('');
+  const [albums, setAlbums] = useState([]);
+  const [album, setAlbum] = useState(false);
+  
+  useEffect(() => {
+  	Modal.setAppElement('body');
+  }, [])
+  
+  useEffect(() => {
+  	if (loading) {
+  		request({ action: 'list', year, month }).then(data => {
+  			if (data?.ok && Array.isArray(data?.albums)) {
+  				setAlbums(data.albums);
+  			} else {
+  				setError(true);
+  				setErrorText('Error loading albums');
+  			}
+  		}).catch(() => {
+  			setError(true);
+  			setErrorText('Error loading albums');
+  		}).finally(() => setLoading(false))
   	}
+  }, [loading])
+  
+  useEffect(() => {
+  	setLoading(true);
+  }, [year, month])
+  
+  const openAddModal = () => {
+  	setMode('add');
+  	setModal(true);
   }
   
-  componentWillMount() {
-	  Modal.setAppElement('body');
+  const openEditModal = item => {
+  	setMode('edit');
+  	setAlbum(item);
+  	setModal(true);
   }
   
-  componentDidMount() {
-    this.list();
+  const closeModal = () => setModal(false);
+  
+  const closeErrorModal = () => setError(false);
+  
+  const changeDate = (year, month) => {
+  	setYear(year);
+  	setMonth(month);
   }
   
-  list() {
-	this.setState({ loading: true });
-	 if (albumsStore.addedDates[albumsStore.year] && albumsStore.addedDates[albumsStore.year][albumsStore.month]) {
-		this.setState({ loading: false }); 
-		return;
-	}
-	const params = {
-		action: 'list',
-		year: albumsStore.year,
-		month: albumsStore.month
-	}
-	request(params).then(
-		data => {
-			if (data && data.ok && Array.isArray(data.albums)) {
-				albumsStore.addDate(albumsStore.year, albumsStore.month);
-				data.albums.forEach(album => { albumsStore.addAlbum(album); });
-			} else {
-				this.setState({ 
-					errorModalOpen : true, 
-					errorText : "Error loading albums" 
-				});
-			}
-			this.setState({ loading: false });
-		}
-	);
-  }
-
-  addCallbackOk(res) {
-	albumsStore.year = res.year;
-	albumsStore.month = res.month;
-	delete res['ok'];
-	delete res['pass'];
-	if (this.state.editedAlbum) albumsStore.editAlbum(res);
-	else albumsStore.addAlbum(res);
-	this.list();
-	this.closeAddModal();
+  const okCallback = () => {
+  	setModal(false);
+  	setLoading(true);
   }
   
-  addCallbackError(error, close) {
-	  if (close) this.closeAddModal();
-	  this.setState({ errorModalOpen : true, errorText : error });
+  const errorCallback = (error, close) => {
+  	if (close) {
+  		setModal(false);
+  	}
+  	setErrorText(error);
+  	setError(true);
   }
   
-  delCallbackOk(res) {
-	  albumsStore.deleteAlbum(res.id);
-	  this.list();
-	  this.closeAddModal();
-  }
   
-  delCallbackError(error) {
-	  this.setState({ errorModalOpen : true, errorText : error });
-  }
-  
-  openAddModal() {
-	  this.setState({addModalOpen : true, addModalMode : 'add', editedAlbum : false});
-  }
-
-  openEditModal(item) {
-	  this.setState({addModalOpen: true, addModalMode : 'edit', editedAlbum : item});
-  }
-  
-  closeAddModal() {
-	  this.setState({addModalOpen : false});
-  }
-  
-  openErrorModal(text) {
-	  this.setState({errorModalOpen : true, errorText : text});
-  }
-  
-  closeErrorModal() {
-	  this.setState({errorModalOpen : false});
-  }
-  
-  changeDate() {
-  	this.list();
-  }
-  
-  render() {
-    return (
-      <LayoutBlock>
-      	<Header changeDate={this.changeDate.bind(this)} albumsStore={albumsStore} add={this.openAddModal.bind(this)}/>
-      	<Content albumsStore={albumsStore} add={this.openAddModal.bind(this)} loading={this.state.loading} openEditModal={this.openEditModal.bind(this)}/>
-      	<Footer/>
-      	<Modal isOpen={this.state.addModalOpen} onRequestClose={this.closeAddModal.bind(this)} style={customStyles}>
-			<AddAlbumBlock year={albumsStore.year} 
-						   month={albumsStore.month} 
-						   okCallback={this.addCallbackOk.bind(this)} 
-						   errorCallback={this.addCallbackError.bind(this)} 
-						   delCallbackOk={this.delCallbackOk.bind(this)}
-						   delCallbackError={this.delCallbackError.bind(this)}
-						   addModalMode={this.state.addModalMode} 
-						   editedAlbum={this.state.editedAlbum}/>
+  return (<LayoutBlock>
+  	<Header changeDate={changeDate} year={year} month={month} add={openAddModal} />
+  	<Content 
+  		albums={albums} 
+  		add={openAddModal} 
+  		loading={loading} 
+  		openEditModal={openEditModal}
+  	/>
+  	<Footer/>
+  	<Modal isOpen={modal} onRequestClose={closeModal} style={customStyles}>
+			<AddAlbumBlock year={year} 
+						   month={month} 
+						   okCallback={okCallback} 
+						   errorCallback={errorCallback} 
+						   mode={mode}
+						   album={album}/>
 		</Modal>
-		<Modal isOpen={this.state.errorModalOpen} onRequestClose={this.closeErrorModal.bind(this)} style={errorCustomStyles}>
-			<HeadText>{this.state.errorText}</HeadText>
-			<AlbumsButton onClick={this.closeErrorModal.bind(this)}>OK</AlbumsButton>
+		<Modal isOpen={error} onRequestClose={closeErrorModal} style={errorCustomStyles}>
+			<HeadText>{errorText}</HeadText>
+			<AlbumsButton onClick={closeErrorModal}>OK</AlbumsButton>
 		</Modal>
-      </LayoutBlock>	
-    );
-  }
+  
+  </LayoutBlock>);
 }
 
-
+export default Layout;

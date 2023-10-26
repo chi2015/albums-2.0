@@ -6,7 +6,7 @@ import glamorous from 'glamorous';
 import AlbumsButton from '../glamorous/AlbumsButton';
 import superagent from 'superagent';
 import request from '../../request';
-import { serverUrl } from '../../config';
+import { serverUrlNew } from '../../config';
 import { imgUrl } from '../../config';
 import MediaQueries from "../glamorous/MediaQueries";
 
@@ -98,17 +98,17 @@ export default class AddAlbumBlock extends React.Component {
 	
 	constructor(props) {
 		super(props);
-		if (props.addModalMode == 'edit') 
+		if (props.mode == 'edit') 
 		this.state = {
-			id : props.editedAlbum.id,
-			year: props.editedAlbum.year,
-			month: props.editedAlbum.month,
+			id : props.album.id,
+			year: props.album.year,
+			month: props.album.month,
 			uploading: false,
-			title: props.editedAlbum.title,
-			artist: props.editedAlbum.artist,
-			itunes_link: props.editedAlbum.itunes_link,
-			copyright: props.editedAlbum.copyright,
-			cover: props.editedAlbum.cover ? imgUrl + props.editedAlbum.cover : false,
+			title: props.album.title,
+			artist: props.album.artist,
+			itunes_link: props.album.itunes_link,
+			copyright: props.album.copyright,
+			cover: props.album.cover ? imgUrl + props.album.cover : false,
 			pass: ''
 		}
 		
@@ -169,15 +169,15 @@ export default class AddAlbumBlock extends React.Component {
 	save() { 
 		this.setState({ uploading : true });
 		
-		let req = superagent.post(serverUrl);
+		let req = superagent.post(serverUrlNew);
 	    let file_input = document.getElementById('cover_file');
-	    req.field('action', this.props.addModalMode);
+	    req.field('action', this.props.mode);
 
 	    for (let param in this.state)
 		  if (param!="cover" && param!="uploading") req.field(param , this.state[param]);
 	      if (file_input.files && file_input.files[0])
 		   req.attach("cover", file_input.files[0]);
-		  else if (this.props.editedAlbum && this.props.editedAlbum.cover) req.field("cover", this.props.editedAlbum.cover);
+		  else if (this.props.album && this.props.album.cover) req.field("cover", this.props.album.cover);
 
 		 req.then((res)  => {
 		     this.setState({uploading : false});
@@ -188,16 +188,16 @@ export default class AddAlbumBlock extends React.Component {
 	}
 
 	delAlbum() {
-		if (window.confirm("Delete this album? This action cannot be undo!")) {
+		if (window.confirm("Delete this album? This action cannot be undone!")) {
 			const params = {
 				action: 'delete',
 				id: this.state.id,
 				pass: this.state.pass
 			};
 			request(params).then(data => {
-				if (data && data.ok) this.props.delCallbackOk(data);
-				if (data && data.error) this.props.delCallbackError(data.error);
-				if (!data) this.props.delCallbackError("Unknown error");
+				if (data && data.ok) this.props.okCallback();
+				if (data && data.error) this.errorCallback(data.error);
+				if (!data) this.props.errorCallback("Unknown error");
 			});
 		}
 	}
@@ -205,7 +205,7 @@ export default class AddAlbumBlock extends React.Component {
 	render() {
 		return (
 		<div>
-		<HeadText>{this.props.addModalMode == 'edit' ? 'Edit Album' : 'Add Album'}</HeadText>
+		<HeadText>{this.props.mode == 'edit' ? 'Edit Album' : 'Add Album'}</HeadText>
 			<ChooseDate year={this.state.year} month={this.state.month} changeDate={this.changeNewAlbumDate.bind(this)} mode="add"/>
 			<NewAlbumBlock>
 				<InputsBlock>
@@ -227,8 +227,8 @@ export default class AddAlbumBlock extends React.Component {
 			</NewAlbumBlock>
 			<input name="cover" type="file" accept=".jpg, .png, .jpeg, .gif" style={{visibility : 'hidden', width : '0', height : '0'}} id="cover_file" onChange={this.openCoverFile.bind(this)} />
 			{this.state.uploading ? <HeadText>Saving album...</HeadText> : 
-				<AlbumsButton onClick={this.save.bind(this)}>{this.props.addModalMode == 'edit' ? 'Save' : 'Add'}</AlbumsButton>}
-			{this.props.addModalMode == 'edit' ? <AlbumsButton buttonType="danger" onClick={this.delAlbum.bind(this)}>Delete</AlbumsButton> : ''}
+				<AlbumsButton onClick={this.save.bind(this)}>{this.props.mode == 'edit' ? 'Save' : 'Add'}</AlbumsButton>}
+			{this.props.mode == 'edit' ? <AlbumsButton buttonType="danger" onClick={this.delAlbum.bind(this)}>Delete</AlbumsButton> : ''}
 		</div>
 		);
     }

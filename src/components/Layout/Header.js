@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import ChooseDate from "./ChooseDate";
 import Modal from "react-modal";
@@ -47,53 +47,45 @@ const HeaderTitle = glamorous.div({
 	}
 };
 
-export default class Header extends React.Component {
-  constructor(props) {
-	  super(props);
-	  this.state = {dateModalOpen : false, year: props.albumsStore.year, month: props.albumsStore.month};
-  }
-  
-  componentWillMount() {
-	  Modal.setAppElement('body');
-  }
-  
-  componentWillReceiveProps(nextProps) {
-  }
 
-  openDateModal() {
-	  this.setState({dateModalOpen : true});
-  }
-  
-  closeDateModal() {
-    this.setState({dateModalOpen: false}); 
-  }
-  
-  getAlbums() {
-    this.props.albumsStore.month = this.state.month;
-	this.props.albumsStore.year = this.state.year;
-    this.props.changeDate();
-  	this.closeDateModal();
-  }
-  
-  changeDate(year, month) {
-	  this.setState({year : year, month : month});
-  }
-  
-  render() {
-    return (
+const Header = props => {
+	const [modal, setModal] = useState(false);
+	const [year, setYear] = useState(props.year);
+	const [month, setMonth] = useState(props.month);
+	
+	useEffect(() => {
+		Modal.setAppElement('body');
+	}, [])
+	
+	const openModal = () => setModal(true);
+	const closeModal = () => setModal(false);
+	
+	const getAlbums = () => {
+		props.changeDate(year, month);
+		closeModal();
+	}
+	
+	const changeDate = (year, month) => {
+		setYear(year);
+		setMonth(month);
+	}
+	
+	return (
       <HeaderBlock>
 		<HeaderTitle>
 			<Heading>Albums Calendar Catalog</Heading>
-			<AddButton onClick={this.props.add}/>
+			<AddButton onClick={props.add}/>
 		</HeaderTitle>
-		<AlbumsButton buttonType="standard" onClick={this.openDateModal.bind(this)}>
-			<DateMonth month={this.props.albumsStore.month}/> {this.props.albumsStore.year > 0 ? this.props.albumsStore.year : (this.props.albumsStore.month!="00" ? "" : "All albums")}
+		<AlbumsButton buttonType="standard" onClick={openModal}>
+			<DateMonth month={props.month}/> { props.year > 0 ? props.year : (props.month!="00" ? "" : "All albums") }
 		</AlbumsButton>
-		<Modal isOpen={this.state.dateModalOpen} onRequestClose={this.closeDateModal.bind(this)} style={customStyles}>
-			<ChooseDate year={this.state.year} month={this.state.month} changeDate={this.changeDate.bind(this)} mode="list"/>
-			<AlbumsButton onClick={this.getAlbums.bind(this)}>OK</AlbumsButton>
+		<Modal isOpen={modal} onRequestClose={closeModal} style={customStyles}>
+			<ChooseDate year={year} month={month} changeDate={changeDate} mode="list" />
+			<AlbumsButton onClick={getAlbums}>OK</AlbumsButton>
 		</Modal>
 	  </HeaderBlock>
     );
-  }
+	
 }
+
+export default Header;
