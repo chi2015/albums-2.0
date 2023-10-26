@@ -50,9 +50,14 @@ const AlbumCopyright = glamorous.div({
 	color: '#bbbbbb'
 });
 
-const Album = observer(({ item }) => (
-			<AlbumItem onDoubleClick={item.openEditModal}>
-        <AlbumCover><AlbumCoverImg src={imgUrl+item.imgSrc} onError={(e)=>{item.cover = false; e.target.src=imgUrl+"cd1.jpg";}}/></AlbumCover>
+const ItunesLink = ({ link }) => {
+	const viewInItunes = () => window.open(link,'_blank');
+	if (!link) return null;
+	return <AlbumsButton buttonType="standard" onClick={viewInItunes}>View in iTunes</AlbumsButton>;
+}
+
+const Album = ({ item, openEditModal }) => <AlbumItem onDoubleClick={openEditModal}>
+        <AlbumCover><AlbumCoverImg src={imgUrl+(item.cover || "cd1.jpg")}/></AlbumCover>
         <AlbumInfo>
 			<AlbumArtist>{item.artist}</AlbumArtist>
 			<AlbumTitle>{item.title}</AlbumTitle>
@@ -61,16 +66,6 @@ const Album = observer(({ item }) => (
         <ItunesLink link={item.itunes_link}/>
         <AlbumCopyright>{item.copyrightString}</AlbumCopyright>
       </AlbumItem>
-));
+
 
 export default Album;
-
-class ItunesLink extends React.Component {
-	viewInItunes() {
-	  window.open(this.props.link,'_blank');
-	}
-	render() {
-		if (this.props.link) return <AlbumsButton buttonType="standard" onClick={this.viewInItunes.bind(this)}>View in iTunes</AlbumsButton>;
-		else return (null);
-	}
-}
