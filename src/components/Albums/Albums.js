@@ -7,11 +7,11 @@ const AlbumsBlock = glamorous.div({
 	display: 'flex',
 	flexDirection: 'row',
 	alignItems: 'flex-start',
-	justifyContent: 'center',
+	justifyContent: 'flex-start',
 	flexWrap: 'wrap',
 	alignContent: 'space-around'
 });
 
-const Albums = ({ albums, openEditModal }) => albums.map(album => <Album key={album.id} item={album} openEditModal={() => openEditModal(album)} />)
+const Albums = ({ albums, openEditModal }) => <AlbumsBlock>{albums.map(album => <Album key={album.id} item={album} openEditModal={() => openEditModal(album)} />)}</AlbumsBlock>
 
 export default Albums;
