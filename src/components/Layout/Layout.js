@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 
 import Header from "./Header";
 import Content from "./Content";
-import Footer from "./Footer";
 
 import Modal from "react-modal";
 
@@ -13,18 +12,29 @@ import HeadText from '../glamorous/HeadText';
 import glamorous from 'glamorous';
 import request from '../../request';
 
-const LayoutBlock = glamorous.div({
+const MainBlock = glamorous.div({
 	margin: '0 auto',
 	maxWidth: 900,
-	minHeight: '100%'
+	minHeight: 'calc(100vh - 40px)',
+	display: 'flex',
+	flexDirection: 'column'
 });
+
+const Footer = glamorous.footer({
+	marginTop: 'auto',
+    height: 20,
+    width: '100%',
+    overflow: 'hidden',
+    textAlign: 'center',
+    fontSize: 14,
+    color: '#aaaaaa'
+});
+
 
 const customStyles = {
 	content : {
 		top                   : '50%',
 		left                  : '50%',
-	  //  maxHeight            : '500px',
-	  //  minWidth : '450px',
 		right                 : 'auto',
 		bottom                : 'auto',
 		textAlign   :          'center',
@@ -36,21 +46,7 @@ const customStyles = {
 	}
 };
 
-const errorCustomStyles = {
-	content : {
-		top                   : '50%',
-		left                  : '50%',
-	    maxHeight            : '90px',
-		right                 : 'auto',
-		bottom                : 'auto',
-		textAlign   :          'center',
-		display    :             'flex',
-		flexDirection :         'column',
-		justifyContent : 'space-around',
-		alignItems : 'center',
-		transform             : 'translate(-50%, -50%)'
-	}
-}
+const errorCustomStyles = { content: { ...customStyles.content, maxHeight: '90px' } };
 
 const Layout = () => {
   const d = new Date();
@@ -122,7 +118,7 @@ const Layout = () => {
   }
   
   
-  return (<LayoutBlock>
+  return (<><MainBlock>
   	<Header changeDate={changeDate} year={year} month={month} add={openAddModal} />
   	<Content 
   		albums={albums} 
@@ -130,7 +126,6 @@ const Layout = () => {
   		loading={loading} 
   		openEditModal={openEditModal}
   	/>
-  	<Footer/>
   	<Modal isOpen={modal} onRequestClose={closeModal} style={customStyles}>
 			<AddAlbumBlock year={year} 
 						   month={month} 
@@ -143,8 +138,8 @@ const Layout = () => {
 			<HeadText>{errorText}</HeadText>
 			<AlbumsButton onClick={closeErrorModal}>OK</AlbumsButton>
 		</Modal>
-  
-  </LayoutBlock>);
+  </MainBlock>
+  <Footer>Albums. All rights reserved</Footer></>);
 }
 
 export default Layout;
