@@ -9,17 +9,11 @@ const NoAlbumsBlock = glamorous.div({
 	alignItems: 'center',
 	justifyContent: 'center',
 	padding:'20px 0'
-	
 });
 
-export default class NoAlbums extends React.Component {
-
-  render() {
-    return (
-      <NoAlbumsBlock>
+const NoAlbums = ({ add }) => (<NoAlbumsBlock>
         <HeadText>No albums found in chosen date</HeadText>
-        <AlbumsButton onClick={this.props.add}>Add</AlbumsButton>
-      </NoAlbumsBlock>
-    );
-  }
-}
+        <AlbumsButton onClick={add}>Add</AlbumsButton>
+      </NoAlbumsBlock>);
+      
+export default NoAlbums;
