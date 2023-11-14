@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import HeadText from '../glamorous/HeadText';
 import ChooseDate from "./ChooseDate";
@@ -94,142 +94,109 @@ const AlbumCoverImg = glamorous.img({
 	height: '100%'
 });
 
-export default class AddAlbumBlock extends React.Component {
+const AddAlbumBlock = props => {
+	const { mode, album, album: { id } } = props;
+	const [year, setYear] = useState(album?.year || props.year);
+	const [month, setMonth] = useState(album?.month || props.month);
+	const [uploading, setUploading] = useState(false)
+	const [title, setTitle] = useState(album?.title || '');
+	const [artist, setArtist] = useState(album?.artist || '');
+	const [itunes_link, setItunesLink] = useState(album?.itunes_link || '');
+	const [copyright, setCopyright] = useState(album?.copyright || '');
+	const [cover, setCover] = useState(album?.cover ? imgUrl + album.cover : false);
+	const [pass, setPass] = useState('');
 	
-	constructor(props) {
-		super(props);
-		if (props.mode == 'edit') 
-		this.state = {
-			id : props.album.id,
-			year: props.album.year,
-			month: props.album.month,
-			uploading: false,
-			title: props.album.title,
-			artist: props.album.artist,
-			itunes_link: props.album.itunes_link,
-			copyright: props.album.copyright,
-			cover: props.album.cover ? imgUrl + props.album.cover : false,
-			pass: ''
-		}
-		
-		else this.state = {
-			year: props.year,
-			month: props.month,
-			uploading: false,
-			title: '',
-			artist: '',
-			itunes_link: '',
-			copyright: '',
-			cover: false,
-			pass: ''
-		}
-	}
-
-	changeNewAlbumDate(year, month) {
-		this.setState({ year : year, month : month});
-	}
+	const changeNewAlbumDate = (y, m) => {
+		setYear(y);
+		setMonth(m);
+	};
 	
-	changeArtist(e) {
-		this.setState({ artist : e.target.value });
-	}
-	
-	changeTitle(e) {
-		this.setState({ title : e.target.value });
-	}
-	
-	changeItunesLink(e) {
-		this.setState({ itunes_link : e.target.value });
-	}
-	
-	changeCopyright(e) {
-		this.setState({ copyright : e.target.value });
-	}
-
-	changePass(e) {
-		this.setState({ pass : e.target.value });
-	}
-	
-	browseCover() {
-		document.getElementById('cover_file').click();
-	}
-	
-	openCoverFile() {
+	const changeArtist = e => setArtist(e.target.value);
+	const changeTitle = e => setTitle(e.target.value);
+	const changeItunesLink = e => setItunesLink(e.target.value);
+	const changeCopyright = e => setCopyright(e.target.value);
+	const changePass = e => setPass(e.target.value);
+	const browseCover = () => document.getElementById('cover_file').click();
+	const openCoverFile = () => {
 		let file_input = document.getElementById('cover_file');
 		if (file_input.files && file_input.files[0]) {
 			let reader = new FileReader();
 			reader.onload = function(e) {
-				this.setState({ cover : e.target.result });
-			}.bind(this);
-			
+				setCover(e.target.result);
+			}
 			reader.readAsDataURL(file_input.files[0]);
 		}
-		else this.setState({ cover : false });
-	}
-	
-	save() { 
-		this.setState({ uploading : true });
-		
+		else setCover(false);
+	};
+	const save = () => { 
+		setUploading(true);
 		let req = superagent.post(serverUrlNew);
 	    let file_input = document.getElementById('cover_file');
-	    req.field('action', this.props.mode);
-
-	    for (let param in this.state)
-		  if (param!="cover" && param!="uploading") req.field(param , this.state[param]);
-	      if (file_input.files && file_input.files[0])
+	    req.field('action', mode);
+	    if (mode === 'edit') {
+	    	req.field('id', id);
+	    }
+	    req.field('year', year);
+	    req.field('month', month);
+	    req.field('title', title);
+	    req.field('artist', artist);
+	    req.field('itunes_link', itunes_link);
+	    req.field('copyright', copyright);
+	    req.field('pass', pass);
+	    if (file_input.files && file_input.files[0])
 		   req.attach("cover", file_input.files[0]);
-		  else if (this.props.album && this.props.album.cover) req.field("cover", this.props.album.cover);
-
+		else if (album?.cover) req.field("cover", album.cover);
+	    
 		 req.then((res)  => {
-		     this.setState({uploading : false});
-		 	 if (res.body && res.body.ok) this.props.okCallback(res.body);
-		     if (res.body && res.body.error) this.props.errorCallback(res.body.error, false);
-			 if (!res.body) this.props.errorCallback("Unknown Error", false);
-		 }).catch((err) => { this.setState({uploading : false}); this.props.errorCallback("Unknown Error", true); });
-	}
-
-	delAlbum() {
+		     setUploading(false);
+		 	 if (res.body && res.body.ok) props.okCallback(res.body);
+		     if (res.body && res.body.error) props.errorCallback(res.body.error, false);
+			 if (!res.body) props.errorCallback("Unknown Error", false);
+		 }).catch((err) => { setUploading(false); props.errorCallback("Unknown Error", true); });
+	};
+	const delAlbum = () => {
 		if (window.confirm("Delete this album? This action cannot be undone!")) {
 			const params = {
 				action: 'delete',
-				id: this.state.id,
-				pass: this.state.pass
+				id,
+				pass
 			};
 			request(params).then(data => {
-				if (data && data.ok) this.props.okCallback();
-				if (data && data.error) this.errorCallback(data.error);
-				if (!data) this.props.errorCallback("Unknown error");
+				if (data && data.ok) props.okCallback();
+				if (data && data.error) props.errorCallback(data.error);
+				if (!data) props.errorCallback("Unknown error");
 			});
 		}
-	}
-	
-	render() {
-		return (
-		<div>
-		<HeadText>{this.props.mode == 'edit' ? 'Edit Album' : 'Add Album'}</HeadText>
-			<ChooseDate year={this.state.year} month={this.state.month} changeDate={this.changeNewAlbumDate.bind(this)} mode="add"/>
+	};
+	return (
+	<div>
+		<HeadText>{mode == 'edit' ? 'Edit Album' : 'Add Album'}</HeadText>
+			<ChooseDate year={year} month={month} changeDate={changeNewAlbumDate} mode="add"/>
 			<NewAlbumBlock>
 				<InputsBlock>
-					<InputBlock>Artist: <AddAlbumInput type="text" value={this.state.artist} onChange={this.changeArtist.bind(this)}/></InputBlock>
-					<InputBlock>Title: <AddAlbumInput type="text" value={this.state.title} onChange={this.changeTitle.bind(this)}/></InputBlock>
-					<InputBlock>iTunes Link: <AddAlbumInput type="text" value={this.state.itunes_link} onChange={this.changeItunesLink.bind(this)}/></InputBlock>
-					<InputBlock>Copyright: <AddAlbumInput type="text" value={this.state.copyright} onChange={this.changeCopyright.bind(this)}/></InputBlock>
-					<InputBlock>Password: <AddAlbumInput type="text" value={this.state.pass} onChange={this.changePass.bind(this)}/></InputBlock>
+					<InputBlock>Artist: <AddAlbumInput type="text" value={artist} onChange={changeArtist}/></InputBlock>
+					<InputBlock>Title: <AddAlbumInput type="text" value={title} onChange={changeTitle}/></InputBlock>
+					<InputBlock>iTunes Link: <AddAlbumInput type="text" value={itunes_link} onChange={changeItunesLink}/></InputBlock>
+					<InputBlock>Copyright: <AddAlbumInput type="text" value={copyright} onChange={changeCopyright}/></InputBlock>
+					<InputBlock>Password: <AddAlbumInput type="text" value={pass} onChange={changePass}/></InputBlock>
 				</InputsBlock>
-				{this.state.cover ? 
-					<AlbumCover onClick={this.browseCover}><AlbumCoverImg src={this.state.cover}/></AlbumCover>
+				{cover ? 
+					<AlbumCover onClick={browseCover}><AlbumCoverImg src={cover}/></AlbumCover>
 					:
-					<AlbumCover onClick={this.browseCover}>
+					<AlbumCover onClick={browseCover}>
 						<AlbumCoverInner><AlbumCoverCenter/></AlbumCoverInner>
 						<AlbumCoverTitle>ADD COVER</AlbumCoverTitle>
 					</AlbumCover>
 					}
 				
 			</NewAlbumBlock>
-			<input name="cover" type="file" accept=".jpg, .png, .jpeg, .gif" style={{visibility : 'hidden', width : '0', height : '0'}} id="cover_file" onChange={this.openCoverFile.bind(this)} />
-			{this.state.uploading ? <HeadText>Saving album...</HeadText> : 
-				<AlbumsButton onClick={this.save.bind(this)}>{this.props.mode == 'edit' ? 'Save' : 'Add'}</AlbumsButton>}
-			{this.props.mode == 'edit' ? <AlbumsButton buttonType="danger" onClick={this.delAlbum.bind(this)}>Delete</AlbumsButton> : ''}
+			<input name="cover" type="file" accept=".jpg, .png, .jpeg, .gif" style={{visibility : 'hidden', width : '0', height : '0'}} id="cover_file" onChange={openCoverFile} />
+			{uploading ? <HeadText>Saving album...</HeadText> : 
+				<AlbumsButton onClick={save}>{mode == 'edit' ? 'Save' : 'Add'}</AlbumsButton>}
+			{mode == 'edit' ? <AlbumsButton buttonType="danger" onClick={delAlbum}>Delete</AlbumsButton> : ''}
 		</div>
-		);
-    }
+	
+	)
 }
+
+export default AddAlbumBlock;
